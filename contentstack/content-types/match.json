@@ -1,0 +1,195 @@
+{
+  "content_type": {
+    "title": "Match",
+    "uid": "match",
+    "description": "Cricket match details",
+    "schema": [
+      {
+        "display_name": "Match Number",
+        "uid": "match_number",
+        "data_type": "number",
+        "mandatory": true,
+        "unique": true,
+        "field_metadata": {
+          "description": "Match number in the season"
+        }
+      },
+      {
+        "display_name": "Match Date",
+        "uid": "match_date",
+        "data_type": "isodate",
+        "mandatory": true
+      },
+      {
+        "display_name": "Match Time",
+        "uid": "match_time",
+        "data_type": "text",
+        "mandatory": true,
+        "field_metadata": {
+          "description": "Match start time (e.g., 4:00 PM)"
+        }
+      },
+      {
+        "display_name": "Venue",
+        "uid": "venue",
+        "data_type": "reference",
+        "reference_to": ["venue"],
+        "mandatory": true
+      },
+      {
+        "display_name": "Team 1",
+        "uid": "team_1",
+        "data_type": "reference",
+        "reference_to": ["team"],
+        "mandatory": true
+      },
+      {
+        "display_name": "Team 2",
+        "uid": "team_2",
+        "data_type": "reference",
+        "reference_to": ["team"],
+        "mandatory": true
+      },
+      {
+        "display_name": "Toss Winner",
+        "uid": "toss_winner",
+        "data_type": "reference",
+        "reference_to": ["team"],
+        "mandatory": false
+      },
+      {
+        "display_name": "Toss Decision",
+        "uid": "toss_decision",
+        "data_type": "text",
+        "mandatory": false,
+        "enum": {
+          "advanced": false,
+          "choices": [
+            { "value": "Bat" },
+            { "value": "Bowl" }
+          ]
+        }
+      },
+      {
+        "display_name": "Match Status",
+        "uid": "match_status",
+        "data_type": "text",
+        "mandatory": true,
+        "enum": {
+          "advanced": false,
+          "choices": [
+            { "value": "Upcoming" },
+            { "value": "Live" },
+            { "value": "Completed" },
+            { "value": "Abandoned" }
+          ]
+        }
+      },
+      {
+        "display_name": "Result",
+        "uid": "result",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Match result text (e.g., Vasai Warriors won by 5 wickets)"
+        }
+      },
+      {
+        "display_name": "Man of the Match",
+        "uid": "man_of_the_match",
+        "data_type": "reference",
+        "reference_to": ["player"],
+        "mandatory": false
+      },
+      {
+        "display_name": "Scorecard",
+        "uid": "scorecard",
+        "data_type": "group",
+        "field_metadata": {
+          "description": "Match scorecard"
+        },
+        "schema": [
+          {
+            "display_name": "Team 1 Score",
+            "uid": "team_1_score",
+            "data_type": "group",
+            "schema": [
+              {
+                "display_name": "Runs",
+                "uid": "runs",
+                "data_type": "number"
+              },
+              {
+                "display_name": "Wickets",
+                "uid": "wickets",
+                "data_type": "number"
+              },
+              {
+                "display_name": "Overs",
+                "uid": "overs",
+                "data_type": "number"
+              },
+              {
+                "display_name": "Run Rate",
+                "uid": "run_rate",
+                "data_type": "number"
+              }
+            ]
+          },
+          {
+            "display_name": "Team 2 Score",
+            "uid": "team_2_score",
+            "data_type": "group",
+            "schema": [
+              {
+                "display_name": "Runs",
+                "uid": "runs",
+                "data_type": "number"
+              },
+              {
+                "display_name": "Wickets",
+                "uid": "wickets",
+                "data_type": "number"
+              },
+              {
+                "display_name": "Overs",
+                "uid": "overs",
+                "data_type": "number"
+              },
+              {
+                "display_name": "Run Rate",
+                "uid": "run_rate",
+                "data_type": "number"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "display_name": "Highlights Video",
+        "uid": "highlights_video",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "YouTube/video URL for match highlights"
+        }
+      },
+      {
+        "display_name": "Match Report",
+        "uid": "match_report",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "multiline": true,
+          "description": "Detailed match report"
+        }
+      }
+    ],
+    "options": {
+      "is_page": false,
+      "singleton": false,
+      "title": "title"
+    }
+  }
+}
+

@@ -1,0 +1,107 @@
+{
+  "launch": {
+    "name": "OCPL Website",
+    "description": "Only Cricket League - Vasai's Premier Cricket Tournament Website",
+    "framework": "nextjs",
+    "build": {
+      "command": "npm run build",
+      "output_directory": ".next",
+      "node_version": "20"
+    },
+    "environment_variables": [
+      {
+        "key": "CONTENTSTACK_API_KEY",
+        "description": "Contentstack Stack API Key",
+        "required": true
+      },
+      {
+        "key": "CONTENTSTACK_DELIVERY_TOKEN",
+        "description": "Contentstack Delivery Token",
+        "required": true
+      },
+      {
+        "key": "CONTENTSTACK_ENVIRONMENT",
+        "description": "Contentstack Environment (production/staging)",
+        "required": true,
+        "default": "production"
+      },
+      {
+        "key": "CONTENTSTACK_REGION",
+        "description": "Contentstack Region (us/eu/azure-na/azure-eu)",
+        "required": false,
+        "default": "us"
+      },
+      {
+        "key": "CONTENTSTACK_PREVIEW_TOKEN",
+        "description": "Contentstack Preview Token for Live Preview",
+        "required": false
+      }
+    ],
+    "domains": {
+      "production": "ocpl.in",
+      "staging": "staging.ocpl.in",
+      "preview": "preview.ocpl.in"
+    },
+    "deployment": {
+      "auto_deploy": true,
+      "branch": "main",
+      "triggers": [
+        {
+          "type": "git_push",
+          "branch": "main"
+        },
+        {
+          "type": "content_publish",
+          "content_types": ["homepage", "match", "article", "team", "player"]
+        }
+      ]
+    },
+    "preview": {
+      "enabled": true,
+      "live_preview": true,
+      "preview_url": "https://preview.ocpl.in"
+    },
+    "caching": {
+      "static_assets": "1 year",
+      "pages": "1 hour",
+      "api_responses": "5 minutes"
+    },
+    "redirects": [
+      {
+        "source": "/home",
+        "destination": "/",
+        "permanent": true
+      },
+      {
+        "source": "/schedule",
+        "destination": "/matches",
+        "permanent": true
+      },
+      {
+        "source": "/standings",
+        "destination": "/points-table",
+        "permanent": true
+      }
+    ],
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          {
+            "key": "X-Frame-Options",
+            "value": "DENY"
+          },
+          {
+            "key": "X-Content-Type-Options",
+            "value": "nosniff"
+          },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          }
+        ]
+      }
+    ]
+  }
+}
+

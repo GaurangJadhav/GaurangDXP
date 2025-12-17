@@ -1,0 +1,131 @@
+{
+  "entries": [
+    {
+      "uid": "team_vasai_warriors",
+      "title": "Vasai Warriors",
+      "team_name": "Vasai Warriors",
+      "short_name": "VW",
+      "primary_color": "#e87425",
+      "secondary_color": "#d95a1b",
+      "owner_name": "Rajesh Patil",
+      "home_ground": "Vasai Sports Ground",
+      "established_year": 2021,
+      "team_motto": "Warriors Never Give Up!",
+      "description": "The Vasai Warriors are one of the founding teams of OCPL. Known for their aggressive batting and never-say-die attitude, the Warriors have won 2 championships and are the most successful team in OCPL history. The team primarily draws players from Vasai West and has a passionate fan following.",
+      "stats": {
+        "matches_played": 45,
+        "wins": 32,
+        "losses": 11,
+        "ties": 1,
+        "no_results": 1,
+        "titles_won": 2
+      }
+    },
+    {
+      "uid": "team_nalasopara_knights",
+      "title": "Nalasopara Knights",
+      "team_name": "Nalasopara Knights",
+      "short_name": "NK",
+      "primary_color": "#3b82f6",
+      "secondary_color": "#2563eb",
+      "owner_name": "Suresh Sharma",
+      "home_ground": "Nalasopara Cricket Ground",
+      "established_year": 2021,
+      "team_motto": "Rise of the Knights",
+      "description": "The Nalasopara Knights represent the heart of Nalasopara. With a balanced squad of experienced players and young talents, the Knights are known for their disciplined bowling attack and tactical approach to the game.",
+      "stats": {
+        "matches_played": 45,
+        "wins": 28,
+        "losses": 15,
+        "ties": 1,
+        "no_results": 1,
+        "titles_won": 1
+      }
+    },
+    {
+      "uid": "team_virar_titans",
+      "title": "Virar Titans",
+      "team_name": "Virar Titans",
+      "short_name": "VT",
+      "primary_color": "#22c55e",
+      "secondary_color": "#16a34a",
+      "owner_name": "Amit Deshmukh",
+      "home_ground": "Virar Stadium",
+      "established_year": 2021,
+      "team_motto": "Titans Rise Together",
+      "description": "Virar Titans are the powerhouse from Virar. Known for their explosive batting lineup and pace bowling attack, the Titans have consistently been playoff contenders. Their home matches at Virar Stadium are always a spectacle.",
+      "stats": {
+        "matches_played": 45,
+        "wins": 25,
+        "losses": 18,
+        "ties": 0,
+        "no_results": 2,
+        "titles_won": 1
+      }
+    },
+    {
+      "uid": "team_nallasopara_strikers",
+      "title": "Nallasopara Strikers",
+      "team_name": "Nallasopara Strikers",
+      "short_name": "NS",
+      "primary_color": "#a855f7",
+      "secondary_color": "#9333ea",
+      "owner_name": "Priya Mehta",
+      "home_ground": "Nallasopara Sports Complex",
+      "established_year": 2022,
+      "team_motto": "Strike Hard, Strike Fast",
+      "description": "The Nallasopara Strikers joined OCPL in the second season and quickly made their mark. Led by a young captain, the Strikers are known for their fearless approach and have some of the most exciting players in the league.",
+      "stats": {
+        "matches_played": 35,
+        "wins": 18,
+        "losses": 15,
+        "ties": 1,
+        "no_results": 1,
+        "titles_won": 0
+      }
+    },
+    {
+      "uid": "team_vasai_kings",
+      "title": "Vasai Kings",
+      "team_name": "Vasai Kings",
+      "short_name": "VK",
+      "primary_color": "#facc15",
+      "secondary_color": "#eab308",
+      "owner_name": "Vikram Singh",
+      "home_ground": "Vasai Sports Ground",
+      "established_year": 2021,
+      "team_motto": "Crown the Kings",
+      "description": "Vasai Kings are the royal franchise of OCPL. With a star-studded lineup and experienced campaigners, the Kings bring glamour and quality cricket to every match. They share the Vasai Sports Ground with the Warriors.",
+      "stats": {
+        "matches_played": 45,
+        "wins": 22,
+        "losses": 21,
+        "ties": 1,
+        "no_results": 1,
+        "titles_won": 1
+      }
+    },
+    {
+      "uid": "team_palghar_panthers",
+      "title": "Palghar Panthers",
+      "team_name": "Palghar Panthers",
+      "short_name": "PP",
+      "primary_color": "#ef4444",
+      "secondary_color": "#dc2626",
+      "owner_name": "Ravi Kumar",
+      "home_ground": "Palghar District Ground",
+      "established_year": 2023,
+      "team_motto": "Unleash the Panther",
+      "description": "The newest addition to OCPL, Palghar Panthers bring fresh energy and talent from the wider Palghar district. Despite being new, they've shown great promise with several young talents emerging from their ranks.",
+      "stats": {
+        "matches_played": 20,
+        "wins": 8,
+        "losses": 11,
+        "ties": 0,
+        "no_results": 1,
+        "titles_won": 0
+      }
+    }
+  ]
+}
+

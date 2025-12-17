@@ -1,0 +1,221 @@
+{
+  "content_type": {
+    "title": "Player",
+    "uid": "player",
+    "description": "Cricket player profile",
+    "schema": [
+      {
+        "display_name": "Player Name",
+        "uid": "player_name",
+        "data_type": "text",
+        "mandatory": true,
+        "field_metadata": {
+          "description": "Full name of the player"
+        }
+      },
+      {
+        "display_name": "Jersey Number",
+        "uid": "jersey_number",
+        "data_type": "number",
+        "mandatory": true,
+        "field_metadata": {
+          "description": "Player's jersey number"
+        }
+      },
+      {
+        "display_name": "Profile Image",
+        "uid": "profile_image",
+        "data_type": "file",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Player profile photo"
+        }
+      },
+      {
+        "display_name": "Role",
+        "uid": "role",
+        "data_type": "text",
+        "mandatory": true,
+        "enum": {
+          "advanced": false,
+          "choices": [
+            { "value": "Batsman" },
+            { "value": "Bowler" },
+            { "value": "All-Rounder" },
+            { "value": "Wicket-Keeper" }
+          ]
+        },
+        "field_metadata": {
+          "description": "Playing role"
+        }
+      },
+      {
+        "display_name": "Batting Style",
+        "uid": "batting_style",
+        "data_type": "text",
+        "mandatory": true,
+        "enum": {
+          "advanced": false,
+          "choices": [
+            { "value": "Right-Handed" },
+            { "value": "Left-Handed" }
+          ]
+        }
+      },
+      {
+        "display_name": "Bowling Style",
+        "uid": "bowling_style",
+        "data_type": "text",
+        "mandatory": false,
+        "enum": {
+          "advanced": false,
+          "choices": [
+            { "value": "Right-arm Fast" },
+            { "value": "Right-arm Medium" },
+            { "value": "Right-arm Off Spin" },
+            { "value": "Right-arm Leg Spin" },
+            { "value": "Left-arm Fast" },
+            { "value": "Left-arm Medium" },
+            { "value": "Left-arm Orthodox" },
+            { "value": "Left-arm Chinaman" },
+            { "value": "N/A" }
+          ]
+        }
+      },
+      {
+        "display_name": "Team",
+        "uid": "team",
+        "data_type": "reference",
+        "reference_to": ["team"],
+        "mandatory": true,
+        "field_metadata": {
+          "description": "Current team"
+        }
+      },
+      {
+        "display_name": "Age",
+        "uid": "age",
+        "data_type": "number",
+        "mandatory": false
+      },
+      {
+        "display_name": "Locality",
+        "uid": "locality",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Area in Vasai/Virar"
+        }
+      },
+      {
+        "display_name": "Occupation",
+        "uid": "occupation",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Player's profession"
+        }
+      },
+      {
+        "display_name": "Bio",
+        "uid": "bio",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "multiline": true,
+          "description": "Player biography"
+        }
+      },
+      {
+        "display_name": "Is Captain",
+        "uid": "is_captain",
+        "data_type": "boolean",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Is this player a team captain?"
+        }
+      },
+      {
+        "display_name": "Player Stats",
+        "uid": "stats",
+        "data_type": "group",
+        "field_metadata": {
+          "description": "Player statistics"
+        },
+        "schema": [
+          {
+            "display_name": "Matches",
+            "uid": "matches",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Runs",
+            "uid": "runs",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Highest Score",
+            "uid": "highest_score",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Batting Average",
+            "uid": "batting_average",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Strike Rate",
+            "uid": "strike_rate",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Fifties",
+            "uid": "fifties",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Hundreds",
+            "uid": "hundreds",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Wickets",
+            "uid": "wickets",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Best Bowling",
+            "uid": "best_bowling",
+            "data_type": "text"
+          },
+          {
+            "display_name": "Bowling Average",
+            "uid": "bowling_average",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Economy",
+            "uid": "economy",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Catches",
+            "uid": "catches",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Stumpings",
+            "uid": "stumpings",
+            "data_type": "number"
+          }
+        ]
+      }
+    ],
+    "options": {
+      "is_page": false,
+      "singleton": false,
+      "title": "player_name"
+    }
+  }
+}
+

@@ -1,0 +1,77 @@
+{
+  "content_type": {
+    "title": "Points Table",
+    "uid": "points_table",
+    "description": "Team standings in the points table",
+    "schema": [
+      {
+        "display_name": "Team",
+        "uid": "team",
+        "data_type": "reference",
+        "reference_to": ["team"],
+        "mandatory": true
+      },
+      {
+        "display_name": "Season",
+        "uid": "season",
+        "data_type": "reference",
+        "reference_to": ["season"],
+        "mandatory": true
+      },
+      {
+        "display_name": "Position",
+        "uid": "position",
+        "data_type": "number",
+        "mandatory": true
+      },
+      {
+        "display_name": "Matches Played",
+        "uid": "matches_played",
+        "data_type": "number",
+        "mandatory": true
+      },
+      {
+        "display_name": "Wins",
+        "uid": "wins",
+        "data_type": "number",
+        "mandatory": true
+      },
+      {
+        "display_name": "Losses",
+        "uid": "losses",
+        "data_type": "number",
+        "mandatory": true
+      },
+      {
+        "display_name": "Ties",
+        "uid": "ties",
+        "data_type": "number",
+        "mandatory": false
+      },
+      {
+        "display_name": "No Results",
+        "uid": "no_results",
+        "data_type": "number",
+        "mandatory": false
+      },
+      {
+        "display_name": "Points",
+        "uid": "points",
+        "data_type": "number",
+        "mandatory": true
+      },
+      {
+        "display_name": "Net Run Rate",
+        "uid": "net_run_rate",
+        "data_type": "number",
+        "mandatory": true
+      }
+    ],
+    "options": {
+      "is_page": false,
+      "singleton": false,
+      "title": "title"
+    }
+  }
+}
+

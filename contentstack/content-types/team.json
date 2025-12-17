@@ -1,0 +1,205 @@
+{
+  "content_type": {
+    "title": "Team",
+    "uid": "team",
+    "description": "Cricket team participating in OCPL",
+    "schema": [
+      {
+        "display_name": "Team Name",
+        "uid": "team_name",
+        "data_type": "text",
+        "mandatory": true,
+        "unique": true,
+        "field_metadata": {
+          "description": "Full name of the team"
+        }
+      },
+      {
+        "display_name": "Short Name",
+        "uid": "short_name",
+        "data_type": "text",
+        "mandatory": true,
+        "unique": true,
+        "field_metadata": {
+          "description": "Short abbreviation (e.g., VW for Vasai Warriors)"
+        }
+      },
+      {
+        "display_name": "Team Logo",
+        "uid": "team_logo",
+        "data_type": "file",
+        "mandatory": true,
+        "field_metadata": {
+          "description": "Team logo image"
+        }
+      },
+      {
+        "display_name": "Team Banner",
+        "uid": "team_banner",
+        "data_type": "file",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Team banner/cover image"
+        }
+      },
+      {
+        "display_name": "Primary Color",
+        "uid": "primary_color",
+        "data_type": "text",
+        "mandatory": true,
+        "field_metadata": {
+          "description": "Primary team color (hex code)"
+        }
+      },
+      {
+        "display_name": "Secondary Color",
+        "uid": "secondary_color",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Secondary team color (hex code)"
+        }
+      },
+      {
+        "display_name": "Captain",
+        "uid": "captain",
+        "data_type": "reference",
+        "reference_to": ["player"],
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Team captain"
+        }
+      },
+      {
+        "display_name": "Owner Name",
+        "uid": "owner_name",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Team owner/manager name"
+        }
+      },
+      {
+        "display_name": "Home Ground",
+        "uid": "home_ground",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Home venue for the team"
+        }
+      },
+      {
+        "display_name": "Established Year",
+        "uid": "established_year",
+        "data_type": "number",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Year the team was established"
+        }
+      },
+      {
+        "display_name": "Team Motto",
+        "uid": "team_motto",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Team motto or tagline"
+        }
+      },
+      {
+        "display_name": "Description",
+        "uid": "description",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "multiline": true,
+          "description": "Team description and history"
+        }
+      },
+      {
+        "display_name": "Social Links",
+        "uid": "social_links",
+        "data_type": "group",
+        "multiple": true,
+        "field_metadata": {
+          "description": "Team social media links"
+        },
+        "schema": [
+          {
+            "display_name": "Platform",
+            "uid": "platform",
+            "data_type": "text",
+            "mandatory": true,
+            "enum": {
+              "advanced": false,
+              "choices": [
+                { "value": "Facebook" },
+                { "value": "Instagram" },
+                { "value": "Twitter" },
+                { "value": "YouTube" }
+              ]
+            }
+          },
+          {
+            "display_name": "URL",
+            "uid": "url",
+            "data_type": "text",
+            "mandatory": true
+          }
+        ]
+      },
+      {
+        "display_name": "Team Stats",
+        "uid": "stats",
+        "data_type": "group",
+        "field_metadata": {
+          "description": "Overall team statistics"
+        },
+        "schema": [
+          {
+            "display_name": "Matches Played",
+            "uid": "matches_played",
+            "data_type": "number",
+            "mandatory": false
+          },
+          {
+            "display_name": "Wins",
+            "uid": "wins",
+            "data_type": "number",
+            "mandatory": false
+          },
+          {
+            "display_name": "Losses",
+            "uid": "losses",
+            "data_type": "number",
+            "mandatory": false
+          },
+          {
+            "display_name": "Ties",
+            "uid": "ties",
+            "data_type": "number",
+            "mandatory": false
+          },
+          {
+            "display_name": "No Results",
+            "uid": "no_results",
+            "data_type": "number",
+            "mandatory": false
+          },
+          {
+            "display_name": "Titles Won",
+            "uid": "titles_won",
+            "data_type": "number",
+            "mandatory": false
+          }
+        ]
+      }
+    ],
+    "options": {
+      "is_page": false,
+      "singleton": false,
+      "title": "team_name"
+    }
+  }
+}
+

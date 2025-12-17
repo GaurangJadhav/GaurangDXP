@@ -1,0 +1,224 @@
+{
+  "personalization": {
+    "description": "Contentstack Personalization configuration for OCPL website",
+    "audiences": [
+      {
+        "id": "team_fans",
+        "name": "Team Fans",
+        "description": "Users who have shown interest in specific teams",
+        "attributes": [
+          {
+            "key": "favorite_team",
+            "type": "string",
+            "description": "User's favorite team (VW, NK, VT, NS, VK, PP)"
+          }
+        ],
+        "rules": [
+          {
+            "condition": "favorite_team == 'VW'",
+            "segment": "vasai_warriors_fans"
+          },
+          {
+            "condition": "favorite_team == 'NK'",
+            "segment": "nalasopara_knights_fans"
+          },
+          {
+            "condition": "favorite_team == 'VT'",
+            "segment": "virar_titans_fans"
+          },
+          {
+            "condition": "favorite_team == 'NS'",
+            "segment": "nallasopara_strikers_fans"
+          },
+          {
+            "condition": "favorite_team == 'VK'",
+            "segment": "vasai_kings_fans"
+          },
+          {
+            "condition": "favorite_team == 'PP'",
+            "segment": "palghar_panthers_fans"
+          }
+        ]
+      },
+      {
+        "id": "location_based",
+        "name": "Location Based",
+        "description": "Users based on their location in Vasai-Virar region",
+        "attributes": [
+          {
+            "key": "user_location",
+            "type": "string",
+            "description": "User's locality"
+          }
+        ],
+        "rules": [
+          {
+            "condition": "user_location contains 'Vasai'",
+            "segment": "vasai_residents"
+          },
+          {
+            "condition": "user_location contains 'Virar'",
+            "segment": "virar_residents"
+          },
+          {
+            "condition": "user_location contains 'Nalasopara'",
+            "segment": "nalasopara_residents"
+          },
+          {
+            "condition": "user_location contains 'Palghar'",
+            "segment": "palghar_residents"
+          }
+        ]
+      },
+      {
+        "id": "engagement_level",
+        "name": "User Engagement",
+        "description": "Users based on their engagement with the platform",
+        "attributes": [
+          {
+            "key": "visit_count",
+            "type": "number",
+            "description": "Number of visits"
+          },
+          {
+            "key": "matches_viewed",
+            "type": "number",
+            "description": "Number of match pages viewed"
+          }
+        ],
+        "rules": [
+          {
+            "condition": "visit_count >= 10 AND matches_viewed >= 5",
+            "segment": "super_fans"
+          },
+          {
+            "condition": "visit_count >= 3",
+            "segment": "regular_visitors"
+          },
+          {
+            "condition": "visit_count == 1",
+            "segment": "new_visitors"
+          }
+        ]
+      }
+    ],
+    "experiences": [
+      {
+        "id": "homepage_hero",
+        "name": "Homepage Hero Personalization",
+        "description": "Show team-specific hero content based on favorite team",
+        "content_type": "homepage",
+        "field": "hero_section",
+        "variants": [
+          {
+            "id": "default",
+            "name": "Default Hero",
+            "audience": "all",
+            "content": {
+              "headline": "OCPL 2025",
+              "subheadline": "Vasai's Premier Cricket League"
+            }
+          },
+          {
+            "id": "warriors_hero",
+            "name": "Warriors Fan Hero",
+            "audience": "vasai_warriors_fans",
+            "content": {
+              "headline": "GO WARRIORS!",
+              "subheadline": "Support your defending champions"
+            }
+          },
+          {
+            "id": "knights_hero",
+            "name": "Knights Fan Hero",
+            "audience": "nalasopara_knights_fans",
+            "content": {
+              "headline": "RISE KNIGHTS!",
+              "subheadline": "The Knights are on a winning streak"
+            }
+          }
+        ]
+      },
+      {
+        "id": "featured_news",
+        "name": "Featured News Personalization",
+        "description": "Show news related to user's favorite team",
+        "content_type": "homepage",
+        "field": "latest_news",
+        "variants": [
+          {
+            "id": "default",
+            "name": "Latest News",
+            "audience": "all",
+            "filter": "ORDER BY publish_date DESC LIMIT 3"
+          },
+          {
+            "id": "team_news",
+            "name": "Team Specific News",
+            "audience": "team_fans",
+            "filter": "WHERE related_team == {{user.favorite_team}} ORDER BY publish_date DESC LIMIT 3"
+          }
+        ]
+      },
+      {
+        "id": "welcome_message",
+        "name": "Welcome Message",
+        "description": "Personalized welcome based on engagement",
+        "variants": [
+          {
+            "id": "new_visitor",
+            "name": "New Visitor Welcome",
+            "audience": "new_visitors",
+            "content": {
+              "message": "Welcome to OCPL! Discover Vasai's biggest cricket tournament.",
+              "cta": "Explore Teams"
+            }
+          },
+          {
+            "id": "returning_visitor",
+            "name": "Returning Visitor",
+            "audience": "regular_visitors",
+            "content": {
+              "message": "Welcome back! Check out the latest match updates.",
+              "cta": "View Schedule"
+            }
+          },
+          {
+            "id": "super_fan",
+            "name": "Super Fan",
+            "audience": "super_fans",
+            "content": {
+              "message": "Hey Super Fan! Your team needs you at the ground!",
+              "cta": "Get Tickets"
+            }
+          }
+        ]
+      }
+    ],
+    "tracking": {
+      "events": [
+        {
+          "name": "page_view",
+          "attributes": ["page_path", "page_title"]
+        },
+        {
+          "name": "team_selected",
+          "attributes": ["team_id", "team_name"]
+        },
+        {
+          "name": "match_viewed",
+          "attributes": ["match_id", "team_1", "team_2"]
+        },
+        {
+          "name": "player_profile_viewed",
+          "attributes": ["player_id", "player_name", "team_id"]
+        },
+        {
+          "name": "article_read",
+          "attributes": ["article_id", "category", "related_team"]
+        }
+      ]
+    }
+  }
+}
+

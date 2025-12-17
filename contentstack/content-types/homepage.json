@@ -1,0 +1,183 @@
+{
+  "content_type": {
+    "title": "Homepage",
+    "uid": "homepage",
+    "description": "Homepage content with personalization support",
+    "schema": [
+      {
+        "display_name": "Hero Section",
+        "uid": "hero_section",
+        "data_type": "group",
+        "mandatory": true,
+        "schema": [
+          {
+            "display_name": "Headline",
+            "uid": "headline",
+            "data_type": "text",
+            "mandatory": true
+          },
+          {
+            "display_name": "Subheadline",
+            "uid": "subheadline",
+            "data_type": "text",
+            "mandatory": false
+          },
+          {
+            "display_name": "Background Image",
+            "uid": "background_image",
+            "data_type": "file",
+            "mandatory": false
+          },
+          {
+            "display_name": "CTA Button Text",
+            "uid": "cta_text",
+            "data_type": "text",
+            "mandatory": false
+          },
+          {
+            "display_name": "CTA Button Link",
+            "uid": "cta_link",
+            "data_type": "text",
+            "mandatory": false
+          },
+          {
+            "display_name": "Countdown Date",
+            "uid": "countdown_date",
+            "data_type": "isodate",
+            "mandatory": false,
+            "field_metadata": {
+              "description": "Date for countdown timer (next match/event)"
+            }
+          }
+        ]
+      },
+      {
+        "display_name": "Featured Matches",
+        "uid": "featured_matches",
+        "data_type": "reference",
+        "reference_to": ["match"],
+        "mandatory": false,
+        "multiple": true
+      },
+      {
+        "display_name": "Featured Teams",
+        "uid": "featured_teams",
+        "data_type": "reference",
+        "reference_to": ["team"],
+        "mandatory": false,
+        "multiple": true
+      },
+      {
+        "display_name": "Featured Players",
+        "uid": "featured_players",
+        "data_type": "reference",
+        "reference_to": ["player"],
+        "mandatory": false,
+        "multiple": true
+      },
+      {
+        "display_name": "Latest News",
+        "uid": "latest_news",
+        "data_type": "reference",
+        "reference_to": ["article"],
+        "mandatory": false,
+        "multiple": true
+      },
+      {
+        "display_name": "Sponsors",
+        "uid": "sponsors",
+        "data_type": "group",
+        "mandatory": false,
+        "multiple": true,
+        "schema": [
+          {
+            "display_name": "Name",
+            "uid": "name",
+            "data_type": "text",
+            "mandatory": true
+          },
+          {
+            "display_name": "Logo",
+            "uid": "logo",
+            "data_type": "file",
+            "mandatory": false
+          },
+          {
+            "display_name": "Tier",
+            "uid": "tier",
+            "data_type": "text",
+            "mandatory": true,
+            "enum": {
+              "advanced": false,
+              "choices": [
+                { "value": "Title" },
+                { "value": "Associate" },
+                { "value": "Official" }
+              ]
+            }
+          },
+          {
+            "display_name": "Website",
+            "uid": "website",
+            "data_type": "text",
+            "mandatory": false
+          }
+        ]
+      },
+      {
+        "display_name": "Announcements",
+        "uid": "announcements",
+        "data_type": "group",
+        "mandatory": false,
+        "multiple": true,
+        "schema": [
+          {
+            "display_name": "Title",
+            "uid": "announcement_title",
+            "data_type": "text",
+            "mandatory": true
+          },
+          {
+            "display_name": "Message",
+            "uid": "message",
+            "data_type": "text",
+            "mandatory": true
+          },
+          {
+            "display_name": "Type",
+            "uid": "type",
+            "data_type": "text",
+            "mandatory": true,
+            "enum": {
+              "advanced": false,
+              "choices": [
+                { "value": "Info" },
+                { "value": "Warning" },
+                { "value": "Success" }
+              ]
+            }
+          },
+          {
+            "display_name": "Link URL",
+            "uid": "link_url",
+            "data_type": "text",
+            "mandatory": false
+          },
+          {
+            "display_name": "Is Active",
+            "uid": "is_active",
+            "data_type": "boolean",
+            "mandatory": false
+          }
+        ]
+      }
+    ],
+    "options": {
+      "is_page": true,
+      "singleton": true,
+      "title": "title",
+      "url_pattern": "/"
+    }
+  }
+}
+

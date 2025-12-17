@@ -1,0 +1,71 @@
+{
+  "content_type": {
+    "title": "Venue",
+    "uid": "venue",
+    "description": "Cricket ground/venue information",
+    "schema": [
+      {
+        "display_name": "Venue Name",
+        "uid": "venue_name",
+        "data_type": "text",
+        "mandatory": true,
+        "unique": true
+      },
+      {
+        "display_name": "Location",
+        "uid": "location",
+        "data_type": "text",
+        "mandatory": true,
+        "field_metadata": {
+          "description": "Specific location/address"
+        }
+      },
+      {
+        "display_name": "City",
+        "uid": "city",
+        "data_type": "text",
+        "mandatory": true
+      },
+      {
+        "display_name": "Capacity",
+        "uid": "capacity",
+        "data_type": "number",
+        "mandatory": false,
+        "field_metadata": {
+          "description": "Spectator capacity"
+        }
+      },
+      {
+        "display_name": "Venue Image",
+        "uid": "venue_image",
+        "data_type": "file",
+        "mandatory": false
+      },
+      {
+        "display_name": "Facilities",
+        "uid": "facilities",
+        "data_type": "text",
+        "mandatory": false,
+        "multiple": true,
+        "field_metadata": {
+          "description": "Available facilities"
+        }
+      },
+      {
+        "display_name": "Description",
+        "uid": "description",
+        "data_type": "text",
+        "mandatory": false,
+        "field_metadata": {
+          "multiline": true
+        }
+      }
+    ],
+    "options": {
+      "is_page": false,
+      "singleton": false,
+      "title": "venue_name"
+    }
+  }
+}
+

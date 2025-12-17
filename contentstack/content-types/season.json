@@ -1,0 +1,116 @@
+{
+  "content_type": {
+    "title": "Season",
+    "uid": "season",
+    "description": "OCPL Season information",
+    "schema": [
+      {
+        "display_name": "Season Name",
+        "uid": "season_name",
+        "data_type": "text",
+        "mandatory": true,
+        "unique": true,
+        "field_metadata": {
+          "description": "e.g., OCPL 2025"
+        }
+      },
+      {
+        "display_name": "Year",
+        "uid": "year",
+        "data_type": "number",
+        "mandatory": true
+      },
+      {
+        "display_name": "Start Date",
+        "uid": "start_date",
+        "data_type": "isodate",
+        "mandatory": true
+      },
+      {
+        "display_name": "End Date",
+        "uid": "end_date",
+        "data_type": "isodate",
+        "mandatory": true
+      },
+      {
+        "display_name": "Season Logo",
+        "uid": "season_logo",
+        "data_type": "file",
+        "mandatory": false
+      },
+      {
+        "display_name": "Champion Team",
+        "uid": "champion_team",
+        "data_type": "reference",
+        "reference_to": ["team"],
+        "mandatory": false
+      },
+      {
+        "display_name": "Runner Up",
+        "uid": "runner_up",
+        "data_type": "reference",
+        "reference_to": ["team"],
+        "mandatory": false
+      },
+      {
+        "display_name": "Orange Cap (Top Scorer)",
+        "uid": "orange_cap",
+        "data_type": "reference",
+        "reference_to": ["player"],
+        "mandatory": false
+      },
+      {
+        "display_name": "Purple Cap (Top Wicket Taker)",
+        "uid": "purple_cap",
+        "data_type": "reference",
+        "reference_to": ["player"],
+        "mandatory": false
+      },
+      {
+        "display_name": "MVP",
+        "uid": "mvp",
+        "data_type": "reference",
+        "reference_to": ["player"],
+        "mandatory": false
+      },
+      {
+        "display_name": "Season Stats",
+        "uid": "season_stats",
+        "data_type": "group",
+        "schema": [
+          {
+            "display_name": "Total Matches",
+            "uid": "total_matches",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Total Runs",
+            "uid": "total_runs",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Total Wickets",
+            "uid": "total_wickets",
+            "data_type": "number"
+          },
+          {
+            "display_name": "Highest Score",
+            "uid": "highest_score",
+            "data_type": "text"
+          },
+          {
+            "display_name": "Best Bowling",
+            "uid": "best_bowling",
+            "data_type": "text"
+          }
+        ]
+      }
+    ],
+    "options": {
+      "is_page": false,
+      "singleton": false,
+      "title": "season_name"
+    }
+  }
+}
+

@@ -1,0 +1,115 @@
+{
+  "content_type": {
+    "title": "Article",
+    "uid": "article",
+    "description": "News articles and match reports",
+    "schema": [
+      {
+        "display_name": "Title",
+        "uid": "article_title",
+        "data_type": "text",
+        "mandatory": true
+      },
+      {
+        "display_name": "URL Slug",
+        "uid": "slug",
+        "data_type": "text",
+        "mandatory": true,
+        "unique": true,
+        "field_metadata": {
+          "description": "URL-friendly slug"
+        }
+      },
+      {
+        "display_name": "Featured Image",
+        "uid": "featured_image",
+        "data_type": "file",
+        "mandatory": false
+      },
+      {
+        "display_name": "Excerpt",
+        "uid": "excerpt",
+        "data_type": "text",
+        "mandatory": true,
+        "field_metadata": {
+          "multiline": true,
+          "description": "Short summary for listings"
+        }
+      },
+      {
+        "display_name": "Content",
+        "uid": "content",
+        "data_type": "text",
+        "mandatory": true,
+        "field_metadata": {
+          "multiline": true,
+          "description": "Full article content (supports markdown)"
+        }
+      },
+      {
+        "display_name": "Author",
+        "uid": "author",
+        "data_type": "text",
+        "mandatory": true
+      },
+      {
+        "display_name": "Publish Date",
+        "uid": "publish_date",
+        "data_type": "isodate",
+        "mandatory": true
+      },
+      {
+        "display_name": "Category",
+        "uid": "category",
+        "data_type": "text",
+        "mandatory": true,
+        "enum": {
+          "advanced": false,
+          "choices": [
+            { "value": "Match Report" },
+            { "value": "News" },
+            { "value": "Interview" },
+            { "value": "Feature" },
+            { "value": "Announcement" }
+          ]
+        }
+      },
+      {
+        "display_name": "Tags",
+        "uid": "tags",
+        "data_type": "text",
+        "mandatory": false,
+        "multiple": true
+      },
+      {
+        "display_name": "Related Team",
+        "uid": "related_team",
+        "data_type": "reference",
+        "reference_to": ["team"],
+        "mandatory": false
+      },
+      {
+        "display_name": "Related Players",
+        "uid": "related_players",
+        "data_type": "reference",
+        "reference_to": ["player"],
+        "mandatory": false,
+        "multiple": true
+      },
+      {
+        "display_name": "Related Match",
+        "uid": "related_match",
+        "data_type": "reference",
+        "reference_to": ["match"],
+        "mandatory": false
+      }
+    ],
+    "options": {
+      "is_page": true,
+      "singleton": false,
+      "title": "article_title",
+      "url_pattern": "/news/:slug"
+    }
+  }
+}
+

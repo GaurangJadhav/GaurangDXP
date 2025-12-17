@@ -1,0 +1,170 @@
+{
+  "entries": [
+    {
+      "uid": "match_1",
+      "title": "Match 1: VW vs NK",
+      "match_number": 1,
+      "match_date": "2025-12-01",
+      "match_time": "4:00 PM",
+      "venue": "venue_vasai_sports_ground",
+      "team_1": "team_vasai_warriors",
+      "team_2": "team_nalasopara_knights",
+      "toss_winner": "team_vasai_warriors",
+      "toss_decision": "Bat",
+      "match_status": "Completed",
+      "result": "Vasai Warriors won by 25 runs",
+      "man_of_the_match": "player_rahul_patil",
+      "scorecard": {
+        "team_1_score": {
+          "runs": 185,
+          "wickets": 6,
+          "overs": 20,
+          "run_rate": 9.25
+        },
+        "team_2_score": {
+          "runs": 160,
+          "wickets": 8,
+          "overs": 20,
+          "run_rate": 8.0
+        }
+      },
+      "match_report": "In the opening match of OCPL 2025, Vasai Warriors set the tone with a commanding victory. Captain Rahul Patil led from the front with a brilliant 78 off 52 balls. The Knights' chase never got going as Amit Sharma picked up 3 crucial wickets upfront."
+    },
+    {
+      "uid": "match_2",
+      "title": "Match 2: VT vs NS",
+      "match_number": 2,
+      "match_date": "2025-12-02",
+      "match_time": "4:00 PM",
+      "venue": "venue_virar_stadium",
+      "team_1": "team_virar_titans",
+      "team_2": "team_nallasopara_strikers",
+      "toss_winner": "team_nallasopara_strikers",
+      "toss_decision": "Bowl",
+      "match_status": "Completed",
+      "result": "Virar Titans won by 5 wickets",
+      "man_of_the_match": "player_vikram_desai",
+      "scorecard": {
+        "team_1_score": {
+          "runs": 145,
+          "wickets": 9,
+          "overs": 20,
+          "run_rate": 7.25
+        },
+        "team_2_score": {
+          "runs": 148,
+          "wickets": 5,
+          "overs": 18.2,
+          "run_rate": 8.07
+        }
+      },
+      "match_report": "Virar Titans chased down a modest target with Vikram Desai playing a crucial knock of 55 not out. Rohan Joshi's 3 wickets kept the Strikers in the game, but it wasn't enough."
+    },
+    {
+      "uid": "match_3",
+      "title": "Match 3: VK vs PP",
+      "match_number": 3,
+      "match_date": "2025-12-03",
+      "match_time": "4:00 PM",
+      "venue": "venue_vasai_sports_ground",
+      "team_1": "team_vasai_kings",
+      "team_2": "team_palghar_panthers",
+      "toss_winner": "team_vasai_kings",
+      "toss_decision": "Bat",
+      "match_status": "Completed",
+      "result": "Vasai Kings won by 42 runs",
+      "man_of_the_match": "player_mahesh_patil",
+      "scorecard": {
+        "team_1_score": {
+          "runs": 192,
+          "wickets": 4,
+          "overs": 20,
+          "run_rate": 9.6
+        },
+        "team_2_score": {
+          "runs": 150,
+          "wickets": 10,
+          "overs": 18.4,
+          "run_rate": 8.04
+        }
+      },
+      "match_report": "Mahesh Patil's elegant 82 powered Vasai Kings to a massive total. Despite Karan Thakur's fighting 28 with the bat, the Panthers fell short."
+    },
+    {
+      "uid": "match_15",
+      "title": "Match 15: VW vs NK",
+      "match_number": 15,
+      "match_date": "2025-12-20",
+      "match_time": "4:00 PM",
+      "venue": "venue_vasai_sports_ground",
+      "team_1": "team_vasai_warriors",
+      "team_2": "team_nalasopara_knights",
+      "match_status": "Upcoming",
+      "scorecard": {
+        "team_1_score": {
+          "runs": 0,
+          "wickets": 0,
+          "overs": 0,
+          "run_rate": 0
+        },
+        "team_2_score": {
+          "runs": 0,
+          "wickets": 0,
+          "overs": 0,
+          "run_rate": 0
+        }
+      }
+    },
+    {
+      "uid": "match_16",
+      "title": "Match 16: VT vs NS",
+      "match_number": 16,
+      "match_date": "2025-12-21",
+      "match_time": "4:00 PM",
+      "venue": "venue_virar_stadium",
+      "team_1": "team_virar_titans",
+      "team_2": "team_nallasopara_strikers",
+      "match_status": "Upcoming",
+      "scorecard": {
+        "team_1_score": {
+          "runs": 0,
+          "wickets": 0,
+          "overs": 0,
+          "run_rate": 0
+        },
+        "team_2_score": {
+          "runs": 0,
+          "wickets": 0,
+          "overs": 0,
+          "run_rate": 0
+        }
+      }
+    },
+    {
+      "uid": "match_17",
+      "title": "Match 17: VK vs PP",
+      "match_number": 17,
+      "match_date": "2025-12-22",
+      "match_time": "4:00 PM",
+      "venue": "venue_vasai_sports_ground",
+      "team_1": "team_vasai_kings",
+      "team_2": "team_palghar_panthers",
+      "match_status": "Upcoming",
+      "scorecard": {
+        "team_1_score": {
+          "runs": 0,
+          "wickets": 0,
+          "overs": 0,
+          "run_rate": 0
+        },
+        "team_2_score": {
+          "runs": 0,
+          "wickets": 0,
+          "overs": 0,
+          "run_rate": 0
+        }
+      }
+    }
+  ]
+}
+

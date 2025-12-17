@@ -1,0 +1,167 @@
+{
+  "workflows": [
+    {
+      "name": "Match Status Update Notification",
+      "description": "Sends notifications when match status changes to Live or Completed",
+      "trigger": {
+        "type": "entry_update",
+        "content_type": "match",
+        "field": "match_status"
+      },
+      "conditions": [
+        {
+          "field": "match_status",
+          "operator": "in",
+          "value": ["Live", "Completed"]
+        }
+      ],
+      "actions": [
+        {
+          "type": "webhook",
+          "name": "Send Push Notification",
+          "config": {
+            "url": "https://your-notification-service.com/api/notify",
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{env.NOTIFICATION_API_KEY}}"
+            },
+            "body": {
+              "title": "OCPL Match Update",
+              "message": "{{entry.team_1.team_name}} vs {{entry.team_2.team_name}} is now {{entry.match_status}}!",
+              "match_id": "{{entry.uid}}",
+              "status": "{{entry.match_status}}"
+            }
+          }
+        },
+        {
+          "type": "slack",
+          "name": "Post to Slack",
+          "config": {
+            "webhook_url": "{{env.SLACK_WEBHOOK_URL}}",
+            "message": ":cricket: *Match Update* - Match {{entry.match_number}}: {{entry.team_1.team_name}} vs {{entry.team_2.team_name}} is now *{{entry.match_status}}*!"
+          }
+        }
+      ]
+    },
+    {
+      "name": "New Article Published",
+      "description": "Triggers when a new article is published",
+      "trigger": {
+        "type": "entry_publish",
+        "content_type": "article"
+      },
+      "actions": [
+        {
+          "type": "webhook",
+          "name": "Trigger Site Rebuild",
+          "config": {
+            "url": "https://api.contentstack.io/v3/launch/deployments",
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {{env.CONTENTSTACK_MANAGEMENT_TOKEN}}"
+            },
+            "body": {
+              "trigger": "content_update",
+              "content_type": "article"
+            }
+          }
+        },
+        {
+          "type": "email",
+          "name": "Notify Subscribers",
+          "config": {
+            "to": "subscribers@ocpl.in",
+            "subject": "New Article: {{entry.article_title}}",
+            "body": "A new article has been published on OCPL.\n\nTitle: {{entry.article_title}}\n\nRead more: https://ocpl.in/news/{{entry.slug}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Points Table Auto Update",
+      "description": "Updates points table when match is completed",
+      "trigger": {
+        "type": "entry_update",
+        "content_type": "match",
+        "field": "match_status"
+      },
+      "conditions": [
+        {
+          "field": "match_status",
+          "operator": "equals",
+          "value": "Completed"
+        }
+      ],
+      "actions": [
+        {
+          "type": "webhook",
+          "name": "Calculate Points",
+          "config": {
+            "url": "https://your-api.com/api/calculate-points",
+            "method": "POST",
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "match_uid": "{{entry.uid}}",
+              "team_1": "{{entry.team_1.uid}}",
+              "team_2": "{{entry.team_2.uid}}",
+              "scorecard": "{{entry.scorecard}}",
+              "result": "{{entry.result}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Player Stats Update",
+      "description": "Updates player statistics after match completion",
+      "trigger": {
+        "type": "entry_update",
+        "content_type": "match",
+        "field": "match_status"
+      },
+      "conditions": [
+        {
+          "field": "match_status",
+          "operator": "equals",
+          "value": "Completed"
+        }
+      ],
+      "actions": [
+        {
+          "type": "webhook",
+          "name": "Update Player Stats",
+          "config": {
+            "url": "https://your-api.com/api/update-player-stats",
+            "method": "POST",
+            "body": {
+              "match_uid": "{{entry.uid}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Schedule Reminder",
+      "description": "Sends reminder 1 hour before match",
+      "trigger": {
+        "type": "scheduled",
+        "schedule": "0 * * * *"
+      },
+      "actions": [
+        {
+          "type": "webhook",
+          "name": "Check Upcoming Matches",
+          "config": {
+            "url": "https://your-api.com/api/check-upcoming-matches",
+            "method": "GET"
+          }
+        }
+      ]
+    }
+  ]
+}
+

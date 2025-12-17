@@ -1,0 +1,81 @@
+{
+  "entries": [
+    {
+      "uid": "venue_vasai_sports_ground",
+      "title": "Vasai Sports Ground",
+      "venue_name": "Vasai Sports Ground",
+      "location": "Near Vasai Railway Station, Vasai West",
+      "city": "Vasai",
+      "capacity": 2000,
+      "facilities": [
+        "Floodlights",
+        "Pavilion",
+        "Scoreboard",
+        "Seating Gallery",
+        "Refreshment Stalls",
+        "Parking"
+      ],
+      "description": "The Vasai Sports Ground is the premier cricket venue in Vasai and the home ground for both Vasai Warriors and Vasai Kings. The ground has hosted numerous OCPL finals and is known for its lively atmosphere during matches. The pitch generally favors batsmen but offers assistance to pacers in the evening."
+    },
+    {
+      "uid": "venue_virar_stadium",
+      "title": "Virar Stadium",
+      "venue_name": "Virar Stadium",
+      "location": "Virar West, Near ST Bus Stand",
+      "city": "Virar",
+      "capacity": 1500,
+      "facilities": [
+        "Floodlights",
+        "Pavilion",
+        "Digital Scoreboard",
+        "Seating Gallery",
+        "Canteen"
+      ],
+      "description": "Virar Stadium is the home ground of Virar Titans. A well-maintained ground with excellent facilities, it's known for its true bounce and carry. The evening matches here are particularly exciting with good crowd support."
+    },
+    {
+      "uid": "venue_nalasopara_cricket_ground",
+      "title": "Nalasopara Cricket Ground",
+      "venue_name": "Nalasopara Cricket Ground",
+      "location": "Nalasopara West, Near Railway Station",
+      "city": "Nalasopara",
+      "capacity": 1200,
+      "facilities": [
+        "Pavilion",
+        "Scoreboard",
+        "Seating Area",
+        "Refreshments"
+      ],
+      "description": "The Nalasopara Cricket Ground is the home venue for Nalasopara Knights. A compact ground with short boundaries, it's a paradise for big hitters. The pitch tends to slow down as the match progresses, favoring spinners."
+    },
+    {
+      "uid": "venue_nallasopara_sports_complex",
+      "title": "Nallasopara Sports Complex",
+      "venue_name": "Nallasopara Sports Complex",
+      "location": "Nallasopara East",
+      "city": "Nallasopara",
+      "capacity": 1000,
+      "facilities": [
+        "Pavilion",
+        "Basic Scoreboard",
+        "Seating Area"
+      ],
+      "description": "The Nallasopara Sports Complex serves as the home ground for Nallasopara Strikers. A developing venue with improving facilities, it provides a good platform for local cricket."
+    },
+    {
+      "uid": "venue_palghar_district_ground",
+      "title": "Palghar District Ground",
+      "venue_name": "Palghar District Ground",
+      "location": "Palghar Town Center",
+      "city": "Palghar",
+      "capacity": 800,
+      "facilities": [
+        "Pavilion",
+        "Basic Seating",
+        "Scoreboard"
+      ],
+      "description": "The Palghar District Ground is the home venue for Palghar Panthers. Though smaller than other OCPL venues, it has a passionate local crowd that creates an electric atmosphere during home games."
+    }
+  ]
+}
+
