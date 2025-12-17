@@ -1,11 +1,10 @@
-"use client";
-
 import Image from "next/image";
 import { Trophy, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { TEAM_LOGOS } from "@/lib/team-logos";
+import { getPointsTable } from "@/lib/contentstack";
 
-// Mock data - In production, this would come from Contentstack
-const pointsTable = [
+// Fallback mock data
+const fallbackPointsTable = [
   {
     position: 1,
     team: { name: "Flame Chargers", shortName: "FC", color: "#e87425", logoUrl: TEAM_LOGOS.FC.logoUrl },
@@ -102,6 +101,16 @@ const topWicketTakers = [
   { name: "Rajesh Yadav", team: "FC", wickets: 10, matches: 10, avg: 24.5, econ: 7.8 },
 ];
 
+// Helper to get team logo
+function getTeamLogoData(shortName: string) {
+  return TEAM_LOGOS[shortName as keyof typeof TEAM_LOGOS] || {
+    name: shortName,
+    shortName: shortName,
+    color: "#666666",
+    logoUrl: "",
+  };
+}
+
 function FormBadge({ result }: { result: string }) {
   const bgColor =
     result === "W"
@@ -119,7 +128,44 @@ function FormBadge({ result }: { result: string }) {
   );
 }
 
-export default function PointsTablePage() {
+export const revalidate = 60; // Revalidate every 60 seconds
+
+export default async function PointsTablePage() {
+  let pointsTable = fallbackPointsTable;
+
+  try {
+    const contentstackPointsTable = await getPointsTable();
+    
+    if (contentstackPointsTable && contentstackPointsTable.length > 0) {
+      pointsTable = contentstackPointsTable.map((entry, index) => {
+        const teamData = entry.team?.[0];
+        const teamLogoData = getTeamLogoData(teamData?.short_name || "");
+        
+        return {
+          position: entry.position || index + 1,
+          team: {
+            name: teamData?.team_name || teamLogoData.name,
+            shortName: teamData?.short_name || teamLogoData.shortName,
+            color: teamData?.primary_color || teamLogoData.color,
+            logoUrl: teamData?.team_logo?.url || teamLogoData.logoUrl,
+          },
+          played: entry.matches_played || 0,
+          won: entry.wins || 0,
+          lost: entry.losses || 0,
+          tied: entry.ties || 0,
+          nr: entry.no_results || 0,
+          points: entry.points || 0,
+          nrr: entry.net_run_rate || 0,
+          form: entry.recent_form || ["W", "W", "L", "W", "L"],
+          qualified: (entry.position || index + 1) <= 4,
+        };
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching points table from Contentstack:", error);
+    // Use fallback data
+  }
+
   return (
     <div className="pt-20 min-h-screen">
       {/* Hero Section */}
@@ -180,14 +226,20 @@ export default function PointsTablePage() {
                               backgroundColor: `${entry.team.color}20`,
                             }}
                           >
-                            <Image
-                              src={entry.team.logoUrl}
-                              alt={entry.team.name}
-                              width={36}
-                              height={36}
-                              className="object-contain"
-                              unoptimized
-                            />
+                            {entry.team.logoUrl ? (
+                              <Image
+                                src={entry.team.logoUrl}
+                                alt={entry.team.name}
+                                width={36}
+                                height={36}
+                                className="object-contain"
+                                unoptimized
+                              />
+                            ) : (
+                              <span className="font-display text-sm" style={{ color: entry.team.color }}>
+                                {entry.team.shortName}
+                              </span>
+                            )}
                           </div>
                           <div>
                             <p className="font-semibold text-white">
@@ -442,4 +494,3 @@ export default function PointsTablePage() {
     </div>
   );
 }
-

@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { 
@@ -14,9 +11,11 @@ import {
   ChevronRight
 } from "lucide-react";
 import { TEAM_LOGOS, getAllTeamLogos } from "@/lib/team-logos";
+import { getAllTeams, getUpcomingMatches, getLatestNews } from "@/lib/contentstack";
+import CountdownTimer from "@/components/CountdownTimer";
 
-// Mock data - In production, this would come from Contentstack
-const mockTeams = getAllTeamLogos().map((team, index) => ({
+// Fallback mock data
+const fallbackTeams = getAllTeamLogos().map((team, index) => ({
   id: index + 1,
   name: team.name,
   shortName: team.shortName,
@@ -26,7 +25,7 @@ const mockTeams = getAllTeamLogos().map((team, index) => ({
   matches: 10,
 }));
 
-const mockUpcomingMatches = [
+const fallbackUpcomingMatches = [
   {
     id: 1,
     matchNumber: 15,
@@ -56,7 +55,15 @@ const mockUpcomingMatches = [
   },
 ];
 
-const mockNews = [
+interface NewsItem {
+  id: string | number;
+  title: string;
+  excerpt: string;
+  date: string;
+  category: string;
+}
+
+const fallbackNews: NewsItem[] = [
   {
     id: 1,
     title: "Flame Chargers clinch thriller against Storm Surfers",
@@ -80,53 +87,91 @@ const mockNews = [
   },
 ];
 
-// Countdown Component
-function Countdown({ targetDate }: { targetDate: Date }) {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate.getTime() - now;
-
-      if (distance > 0) {
-        setTimeLeft({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000),
-        });
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [targetDate]);
-
-  return (
-    <div className="flex gap-4 md:gap-6">
-      {Object.entries(timeLeft).map(([unit, value]) => (
-        <div key={unit} className="text-center">
-          <div className="w-16 h-16 md:w-20 md:h-20 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center mb-2">
-            <span className="font-display text-3xl md:text-4xl text-white">
-              {value.toString().padStart(2, "0")}
-            </span>
-          </div>
-          <span className="text-xs md:text-sm text-dark-400 uppercase tracking-wider">
-            {unit}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
+// Helper to get team logo
+function getTeamLogoData(shortName: string) {
+  return TEAM_LOGOS[shortName as keyof typeof TEAM_LOGOS] || {
+    name: shortName,
+    shortName: shortName,
+    color: "#666666",
+    logoUrl: "",
+  };
 }
 
-export default function HomePage() {
+export const revalidate = 60; // Revalidate every 60 seconds
+
+export default async function HomePage() {
   const nextMatchDate = new Date("2025-12-20T16:00:00");
+
+  // Fetch data from Contentstack
+  let teams = fallbackTeams;
+  let upcomingMatches = fallbackUpcomingMatches;
+  let news: NewsItem[] = fallbackNews;
+
+  try {
+    // Fetch teams
+    const contentstackTeams = await getAllTeams();
+    if (contentstackTeams && contentstackTeams.length > 0) {
+      teams = contentstackTeams.map((team, index) => ({
+        id: index + 1,
+        name: team.team_name || team.title,
+        shortName: team.short_name || "",
+        color: team.primary_color || getTeamLogoData(team.short_name || "").color,
+        logoUrl: team.team_logo?.url || getTeamLogoData(team.short_name || "").logoUrl,
+        wins: team.stats?.wins || 0,
+        matches: team.stats?.matches_played || 0,
+      }));
+    }
+
+    // Fetch upcoming matches
+    const contentstackMatches = await getUpcomingMatches();
+    if (contentstackMatches && contentstackMatches.length > 0) {
+      upcomingMatches = contentstackMatches.slice(0, 3).map((match) => {
+        const team1Data = match.team_1?.[0];
+        const team2Data = match.team_2?.[0];
+        const team1Logo = getTeamLogoData(team1Data?.short_name || "");
+        const team2Logo = getTeamLogoData(team2Data?.short_name || "");
+        
+        return {
+          id: match.match_number || 0,
+          matchNumber: match.match_number || 0,
+          team1: {
+            name: team1Data?.team_name || team1Logo.name,
+            shortName: team1Data?.short_name || team1Logo.shortName,
+            color: team1Data?.primary_color || team1Logo.color,
+            logoUrl: team1Data?.team_logo?.url || team1Logo.logoUrl,
+          },
+          team2: {
+            name: team2Data?.team_name || team2Logo.name,
+            shortName: team2Data?.short_name || team2Logo.shortName,
+            color: team2Data?.primary_color || team2Logo.color,
+            logoUrl: team2Data?.team_logo?.url || team2Logo.logoUrl,
+          },
+          date: match.match_date 
+            ? new Date(match.match_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+            : "TBD",
+          time: match.match_time || "4:00 PM",
+          venue: match.venue?.[0]?.venue_name || "Vasai Sports Ground",
+        };
+      });
+    }
+
+    // Fetch latest news
+    const contentstackNews = await getLatestNews(3);
+    if (contentstackNews && contentstackNews.length > 0) {
+      news = contentstackNews.map((article) => ({
+        id: article.uid || "",
+        title: article.title || "",
+        excerpt: article.excerpt || article.content?.substring(0, 150) + "..." || "",
+        date: article.publish_date 
+          ? new Date(article.publish_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+          : "Recent",
+        category: article.category || "News",
+      }));
+    }
+  } catch (error) {
+    console.error("Error fetching data from Contentstack:", error);
+    // Use fallback data
+  }
 
   return (
     <div className="pt-20">
@@ -168,7 +213,7 @@ export default function HomePage() {
                 Next Match In
               </p>
               <div className="flex justify-center">
-                <Countdown targetDate={nextMatchDate} />
+                <CountdownTimer targetDate={nextMatchDate.toISOString()} />
               </div>
             </div>
 
@@ -241,7 +286,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockUpcomingMatches.map((match, index) => (
+            {upcomingMatches.map((match, index) => (
               <div
                 key={match.id}
                 className="card p-6 stagger-item"
@@ -262,14 +307,20 @@ export default function HomePage() {
                       className="w-16 h-16 rounded-full flex items-center justify-center mb-3 mx-auto overflow-hidden"
                       style={{ backgroundColor: `${match.team1.color}20` }}
                     >
-                      <Image
-                        src={match.team1.logoUrl}
-                        alt={match.team1.name}
-                        width={56}
-                        height={56}
-                        className="object-contain"
-                        unoptimized
-                      />
+                      {match.team1.logoUrl ? (
+                        <Image
+                          src={match.team1.logoUrl}
+                          alt={match.team1.name}
+                          width={56}
+                          height={56}
+                          className="object-contain"
+                          unoptimized
+                        />
+                      ) : (
+                        <span className="font-display text-xl" style={{ color: match.team1.color }}>
+                          {match.team1.shortName}
+                        </span>
+                      )}
                     </div>
                     <p className="text-sm text-dark-300 font-medium">
                       {match.team1.name}
@@ -287,14 +338,20 @@ export default function HomePage() {
                       className="w-16 h-16 rounded-full flex items-center justify-center mb-3 mx-auto overflow-hidden"
                       style={{ backgroundColor: `${match.team2.color}20` }}
                     >
-                      <Image
-                        src={match.team2.logoUrl}
-                        alt={match.team2.name}
-                        width={56}
-                        height={56}
-                        className="object-contain"
-                        unoptimized
-                      />
+                      {match.team2.logoUrl ? (
+                        <Image
+                          src={match.team2.logoUrl}
+                          alt={match.team2.name}
+                          width={56}
+                          height={56}
+                          className="object-contain"
+                          unoptimized
+                        />
+                      ) : (
+                        <span className="font-display text-xl" style={{ color: match.team2.color }}>
+                          {match.team2.shortName}
+                        </span>
+                      )}
                     </div>
                     <p className="text-sm text-dark-300 font-medium">
                       {match.team2.name}
@@ -341,7 +398,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {mockTeams.map((team, index) => (
+            {teams.map((team, index) => (
               <Link
                 key={team.id}
                 href={`/teams/${team.shortName.toLowerCase()}`}
@@ -352,14 +409,20 @@ export default function HomePage() {
                   className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 overflow-hidden"
                   style={{ backgroundColor: `${team.color}20` }}
                 >
-                  <Image
-                    src={team.logoUrl}
-                    alt={team.name}
-                    width={72}
-                    height={72}
-                    className="object-contain"
-                    unoptimized
-                  />
+                  {team.logoUrl ? (
+                    <Image
+                      src={team.logoUrl}
+                      alt={team.name}
+                      width={72}
+                      height={72}
+                      className="object-contain"
+                      unoptimized
+                    />
+                  ) : (
+                    <span className="font-display text-2xl" style={{ color: team.color }}>
+                      {team.shortName}
+                    </span>
+                  )}
                 </div>
                 <h3 className="font-semibold text-white mb-2 text-sm">
                   {team.name}
@@ -400,7 +463,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockNews.map((article, index) => (
+            {news.map((article, index) => (
               <article
                 key={article.id}
                 className="card overflow-hidden group stagger-item"
@@ -467,4 +530,3 @@ export default function HomePage() {
     </div>
   );
 }
-

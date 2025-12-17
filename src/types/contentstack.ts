@@ -40,6 +40,7 @@ export interface TeamStats {
   ties: number;
   no_results: number;
   titles_won: number;
+  titles?: number;
 }
 
 export interface SocialLink {
@@ -97,8 +98,14 @@ export interface Match {
   toss_decision: "Bat" | "Bowl";
   match_status: "Upcoming" | "Live" | "Completed" | "Abandoned";
   result: string;
+  result_summary?: string;
   man_of_the_match: Player[];
-  scorecard: Scorecard;
+  scorecard?: Scorecard;
+  // Flat score fields (alternative to scorecard)
+  team_1_score?: string;
+  team_1_overs?: string;
+  team_2_score?: string;
+  team_2_overs?: string;
   highlights_video: string;
   match_report: string;
 }
@@ -162,6 +169,7 @@ export interface PointsTableEntry {
   points: number;
   net_run_rate: number;
   position: number;
+  recent_form?: string[];
 }
 
 // News/Article Content Type

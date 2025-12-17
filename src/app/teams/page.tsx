@@ -1,93 +1,69 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { Trophy, Users, TrendingUp, Award } from "lucide-react";
-import { TEAM_LOGOS } from "@/lib/team-logos";
+import { getAllTeams } from "@/lib/contentstack";
+import { TEAM_LOGOS, getAllTeamLogos } from "@/lib/team-logos";
 
-// Mock data - In production, this would come from Contentstack
-const teams = [
-  {
-    id: "fc",
-    name: "Flame Chargers",
-    shortName: "FC",
-    color: "#e87425",
-    logoUrl: TEAM_LOGOS.FC.logoUrl,
-    motto: "Ignite the Fire!",
-    owner: "Rajesh Patil",
-    homeGround: "Vasai Sports Ground",
-    established: 2021,
-    stats: { matches: 45, wins: 32, losses: 11, titles: 2 },
-    description: "The most successful team in OCPL history with 2 championship titles. Known for their fiery batting.",
-  },
-  {
-    id: "ss",
-    name: "Storm Surfers",
-    shortName: "SS",
-    color: "#3b82f6",
-    logoUrl: TEAM_LOGOS.SS.logoUrl,
-    motto: "Ride the Storm!",
-    owner: "Suresh Sharma",
-    homeGround: "Nalasopara Cricket Ground",
-    established: 2021,
-    stats: { matches: 45, wins: 28, losses: 15, titles: 1 },
-    description: "Known for disciplined bowling attack. They surge through opponents like a storm.",
-  },
-  {
-    id: "ww",
-    name: "Windstorm Warriors",
-    shortName: "WW",
-    color: "#22c55e",
-    logoUrl: TEAM_LOGOS.WW.logoUrl,
-    motto: "Swift as the Wind!",
-    owner: "Amit Deshmukh",
-    homeGround: "Virar Stadium",
-    established: 2021,
-    stats: { matches: 45, wins: 25, losses: 18, titles: 1 },
-    description: "Explosive batting lineup that sweeps through opposition like a windstorm.",
-  },
-  {
-    id: "et",
-    name: "Earth Titans",
-    shortName: "ET",
-    color: "#a855f7",
-    logoUrl: TEAM_LOGOS.ET.logoUrl,
-    motto: "Solid as Earth!",
-    owner: "Priya Mehta",
-    homeGround: "Nallasopara Sports Complex",
-    established: 2022,
-    stats: { matches: 35, wins: 18, losses: 15, titles: 0 },
-    description: "Young fearless team with a rock-solid foundation and grounded approach.",
-  },
-  {
-    id: "ts",
-    name: "Thunder Strikers",
-    shortName: "TS",
-    color: "#facc15",
-    logoUrl: TEAM_LOGOS.TS.logoUrl,
-    motto: "Strike like Thunder!",
-    owner: "Vikram Singh",
-    homeGround: "Vasai Sports Ground",
-    established: 2021,
-    stats: { matches: 45, wins: 22, losses: 21, titles: 1 },
-    description: "Royal franchise with star lineup that strikes fear into opponents.",
-  },
-  {
-    id: "gg",
-    name: "Glacier Gladiators",
-    shortName: "GG",
-    color: "#06b6d4",
-    logoUrl: TEAM_LOGOS.GG.logoUrl,
-    motto: "Cool Under Pressure!",
-    owner: "Ravi Kumar",
-    homeGround: "Palghar District Ground",
-    established: 2023,
-    stats: { matches: 20, wins: 8, losses: 11, titles: 0 },
-    description: "Newest team with fresh energy. They stay ice-cool in pressure situations.",
-  },
-];
+// Fallback mock data in case Contentstack fetch fails
+const fallbackTeams = getAllTeamLogos().map((team, index) => ({
+  id: team.shortName.toLowerCase(),
+  name: team.name,
+  shortName: team.shortName,
+  color: team.color,
+  logoUrl: team.logoUrl,
+  motto: "Cricket Excellence!",
+  owner: "OCPL",
+  homeGround: "Vasai Sports Ground",
+  established: 2021,
+  stats: { matches: 45, wins: 30 - index * 3, losses: 15 + index * 2, titles: index < 3 ? 2 - index : 0 },
+  description: `${team.name} - One of the premier teams in OCPL.`,
+}));
 
-export default function TeamsPage() {
+// Helper function to get team logo URL
+function getTeamLogoUrl(shortName: string): string {
+  const logoData = TEAM_LOGOS[shortName as keyof typeof TEAM_LOGOS];
+  return logoData?.logoUrl || "";
+}
+
+// Helper function to get team color
+function getTeamColor(shortName: string): string {
+  const logoData = TEAM_LOGOS[shortName as keyof typeof TEAM_LOGOS];
+  return logoData?.color || "#666666";
+}
+
+export const revalidate = 60; // Revalidate every 60 seconds
+
+export default async function TeamsPage() {
+  let teams = fallbackTeams;
+  
+  try {
+    const contentstackTeams = await getAllTeams();
+    
+    if (contentstackTeams && contentstackTeams.length > 0) {
+      teams = contentstackTeams.map((team) => ({
+        id: team.short_name?.toLowerCase() || team.uid,
+        name: team.team_name || team.title,
+        shortName: team.short_name || "",
+        color: team.primary_color || getTeamColor(team.short_name || ""),
+        logoUrl: team.team_logo?.url || getTeamLogoUrl(team.short_name || ""),
+        motto: team.team_motto || "Cricket Excellence!",
+        owner: team.owner_name || "OCPL",
+        homeGround: team.home_ground || "Vasai Sports Ground",
+        established: team.established_year || 2021,
+        stats: {
+          matches: team.stats?.matches_played || 0,
+          wins: team.stats?.wins || 0,
+          losses: team.stats?.losses || 0,
+          titles: team.stats?.titles || 0,
+        },
+        description: team.description || `${team.team_name} - One of the premier teams in OCPL.`,
+      }));
+    }
+  } catch (error) {
+    console.error("Error fetching teams from Contentstack:", error);
+    // Use fallback data
+  }
+
   return (
     <div className="pt-20 min-h-screen">
       {/* Hero Section */}
@@ -126,14 +102,20 @@ export default function TeamsPage() {
                     className="w-24 h-24 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 overflow-hidden"
                     style={{ backgroundColor: `${team.color}30` }}
                   >
-                    <Image
-                      src={team.logoUrl}
-                      alt={team.name}
-                      width={88}
-                      height={88}
-                      className="object-contain"
-                      unoptimized
-                    />
+                    {team.logoUrl ? (
+                      <Image
+                        src={team.logoUrl}
+                        alt={team.name}
+                        width={88}
+                        height={88}
+                        className="object-contain"
+                        unoptimized
+                      />
+                    ) : (
+                      <span className="font-display text-3xl" style={{ color: team.color }}>
+                        {team.shortName}
+                      </span>
+                    )}
                   </div>
                   {team.stats.titles > 0 && (
                     <div className="absolute top-4 right-4 flex items-center gap-1">
@@ -179,7 +161,9 @@ export default function TeamsPage() {
                     </div>
                     <div className="text-center">
                       <p className="font-display text-2xl text-white">
-                        {((team.stats.wins / team.stats.matches) * 100).toFixed(0)}%
+                        {team.stats.matches > 0 
+                          ? ((team.stats.wins / team.stats.matches) * 100).toFixed(0) 
+                          : 0}%
                       </p>
                       <p className="text-xs text-dark-500 uppercase">Win Rate</p>
                     </div>
@@ -242,7 +226,7 @@ export default function TeamsPage() {
                 </div>
               </div>
               <div className="space-y-4">
-                {teams
+                {[...teams]
                   .sort((a, b) => b.stats.wins - a.stats.wins)
                   .slice(0, 4)
                   .map((team, index) => (
@@ -276,7 +260,7 @@ export default function TeamsPage() {
                 </div>
               </div>
               <div className="space-y-4">
-                {teams
+                {[...teams]
                   .filter((t) => t.stats.titles > 0)
                   .sort((a, b) => b.stats.titles - a.stats.titles)
                   .map((team, index) => (
@@ -316,7 +300,7 @@ export default function TeamsPage() {
                 </div>
               </div>
               <div className="space-y-4">
-                {teams
+                {[...teams]
                   .filter((t) => t.stats.matches >= 20)
                   .sort(
                     (a, b) =>
@@ -348,4 +332,3 @@ export default function TeamsPage() {
     </div>
   );
 }
-
