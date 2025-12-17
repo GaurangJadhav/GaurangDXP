@@ -135,6 +135,19 @@ function getTeamLogoData(shortName: string) {
   };
 }
 
+// Helper to format score from runs/wickets
+function formatScore(runs?: number, wickets?: number): string | undefined {
+  if (runs === undefined) return undefined;
+  if (wickets === undefined) return `${runs}`;
+  return `${runs}/${wickets}`;
+}
+
+// Helper to format overs
+function formatOvers(overs?: number): string | undefined {
+  if (overs === undefined) return undefined;
+  return overs.toString();
+}
+
 export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function MatchesPage() {
@@ -164,20 +177,20 @@ export default async function MatchesPage() {
             shortName: team1Data?.short_name || team1Logo.shortName,
             color: team1Data?.primary_color || team1Logo.color,
             logoUrl: team1Data?.team_logo?.url || team1Logo.logoUrl,
-            score: match.team_1_score,
-            overs: match.team_1_overs,
+            score: formatScore(match.team_1_runs, match.team_1_wickets),
+            overs: formatOvers(match.team_1_overs),
           },
           team2: {
             name: team2Data?.team_name || team2Logo.name,
             shortName: team2Data?.short_name || team2Logo.shortName,
             color: team2Data?.primary_color || team2Logo.color,
             logoUrl: team2Data?.team_logo?.url || team2Logo.logoUrl,
-            score: match.team_2_score,
-            overs: match.team_2_overs,
+            score: formatScore(match.team_2_runs, match.team_2_wickets),
+            overs: formatOvers(match.team_2_overs),
           },
           status: match.match_status || "Upcoming",
-          result: match.result_summary,
-          motm: match.man_of_the_match?.[0]?.player_name,
+          result: match.result,
+          motm: match.man_of_the_match,
         };
       });
     }

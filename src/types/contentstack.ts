@@ -94,20 +94,25 @@ export interface Match {
   venue: Venue[];
   team_1: Team[];
   team_2: Team[];
-  toss_winner: Team[];
-  toss_decision: "Bat" | "Bowl";
+  toss_winner: string;
+  toss_decision: string;
   match_status: "Upcoming" | "Live" | "Completed" | "Abandoned";
   result: string;
   result_summary?: string;
-  man_of_the_match: Player[];
+  man_of_the_match: string;
   scorecard?: Scorecard;
-  // Flat score fields (alternative to scorecard)
+  // Score fields (separate runs, wickets, overs as numbers)
+  team_1_runs?: number;
+  team_1_wickets?: number;
+  team_1_overs?: number;
+  team_2_runs?: number;
+  team_2_wickets?: number;
+  team_2_overs?: number;
+  // Legacy string fields for backwards compatibility
   team_1_score?: string;
-  team_1_overs?: string;
   team_2_score?: string;
-  team_2_overs?: string;
-  highlights_video: string;
-  match_report: string;
+  highlights_video?: string;
+  match_report?: string;
 }
 
 export interface Scorecard {
