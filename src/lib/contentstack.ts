@@ -9,6 +9,7 @@ import type {
   PointsTableEntry,
   Venue,
   Gallery,
+  Video,
 } from "@/types/contentstack";
 
 // Initialize Contentstack SDK
@@ -345,6 +346,66 @@ export async function getPersonalizedContent<T>(
   } catch (error) {
     handleError(error, "getPersonalizedContent");
     return null;
+  }
+}
+
+// ==================== VIDEOS ====================
+export async function getAllVideos(): Promise<Video[]> {
+  try {
+    const result = await Stack.ContentType("video")
+      .Query()
+      .descending("publish_date")
+      .toJSON()
+      .find();
+    return result[0] as Video[];
+  } catch (error) {
+    handleError(error, "getAllVideos");
+    return [];
+  }
+}
+
+export async function getFeaturedVideos(): Promise<Video[]> {
+  try {
+    const result = await Stack.ContentType("video")
+      .Query()
+      .where("is_featured", true)
+      .descending("publish_date")
+      .toJSON()
+      .find();
+    return result[0] as Video[];
+  } catch (error) {
+    handleError(error, "getFeaturedVideos");
+    return [];
+  }
+}
+
+export async function getVideosByCategory(category: string): Promise<Video[]> {
+  try {
+    const result = await Stack.ContentType("video")
+      .Query()
+      .where("category", category)
+      .descending("publish_date")
+      .toJSON()
+      .find();
+    return result[0] as Video[];
+  } catch (error) {
+    handleError(error, "getVideosByCategory");
+    return [];
+  }
+}
+
+export async function getVideosByType(videoType: string): Promise<Video[]> {
+  try {
+    const result = await Stack.ContentType("video")
+      .Query()
+      .where("video_type", videoType)
+      .descending("publish_date")
+      .toJSON()
+      .find();
+    return result[0] as Video[];
+  } catch (error) {
+    handleError(error, "getVideosByType");
+    return [];
   }
 }
 

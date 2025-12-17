@@ -1,95 +1,118 @@
-"use client";
+import { Play, Eye, Clock, Filter } from "lucide-react";
+import { getAllVideos } from "@/lib/contentstack";
+import VideoGrid from "@/components/VideoGrid";
+import { Video } from "@/types/contentstack";
 
-import { useState } from "react";
-import { Calendar, X, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
-
-// Mock data - In production, this would come from Contentstack
-const galleries = [
+// Fallback mock data with placeholder YouTube IDs
+const fallbackVideos: Video[] = [
   {
-    id: "opening-ceremony-2025",
-    title: "OCPL 2025 Opening Ceremony",
-    description: "Grand opening ceremony at Vasai Sports Ground",
-    date: "Dec 1, 2025",
-    imageCount: 24,
-    coverColor: "#e87425",
+    uid: "1",
+    title: "Amazing Catch by Rahul Patil - Match 8",
+    description: "Stunning one-handed catch at the boundary by Flame Chargers captain",
+    youtube_video_id: "dQw4w9WgXcQ", // Placeholder - replace with actual ID
+    video_type: "Short",
+    category: "Best Catches",
+    publish_date: "2025-12-09",
+    views: 15000,
+    duration: 30,
+    is_featured: true,
   },
   {
-    id: "match-1-vw-vs-nk",
-    title: "Match 1: VW vs NK",
-    description: "Vasai Warriors vs Nalasopara Knights - Season opener",
-    date: "Dec 1, 2025",
-    imageCount: 18,
-    coverColor: "#3b82f6",
+    uid: "2",
+    title: "Monster Six by Mahesh Patil",
+    description: "Huge six out of the ground by Thunder Strikers batsman",
+    youtube_video_id: "dQw4w9WgXcQ",
+    video_type: "Short",
+    category: "Best Sixes",
+    publish_date: "2025-12-07",
+    views: 12000,
+    duration: 25,
+    is_featured: true,
   },
   {
-    id: "match-2-vt-vs-ns",
-    title: "Match 2: VT vs NS",
-    description: "Virar Titans vs Nallasopara Strikers",
-    date: "Dec 2, 2025",
-    imageCount: 15,
-    coverColor: "#22c55e",
+    uid: "3",
+    title: "Hat-trick by Amit Sharma",
+    description: "Three wickets in three balls - incredible bowling spell",
+    youtube_video_id: "dQw4w9WgXcQ",
+    video_type: "Short",
+    category: "Best Wickets",
+    publish_date: "2025-12-05",
+    views: 20000,
+    duration: 45,
+    is_featured: true,
   },
   {
-    id: "match-3-vk-vs-pp",
-    title: "Match 3: VK vs PP",
-    description: "Vasai Kings vs Palghar Panthers",
-    date: "Dec 3, 2025",
-    imageCount: 20,
-    coverColor: "#facc15",
+    uid: "4",
+    title: "OCPL 2025 Opening Ceremony Highlights",
+    description: "Best moments from the grand opening ceremony",
+    youtube_video_id: "dQw4w9WgXcQ",
+    video_type: "Highlight",
+    category: "Ceremony",
+    publish_date: "2025-12-01",
+    views: 25000,
+    duration: 120,
+    is_featured: false,
   },
   {
-    id: "team-photoshoots",
-    title: "Team Photoshoots 2025",
-    description: "Official team photos for the season",
-    date: "Nov 25, 2025",
-    imageCount: 30,
-    coverColor: "#a855f7",
+    uid: "5",
+    title: "Match 1 Final Over Thriller",
+    description: "Nail-biting last over as Flame Chargers clinch victory",
+    youtube_video_id: "dQw4w9WgXcQ",
+    video_type: "Highlight",
+    category: "Match Highlights",
+    publish_date: "2025-12-01",
+    views: 18000,
+    duration: 90,
+    is_featured: true,
   },
   {
-    id: "practice-sessions",
-    title: "Pre-Season Practice",
-    description: "Teams preparing for OCPL 2025",
-    date: "Nov 20, 2025",
-    imageCount: 22,
-    coverColor: "#ef4444",
+    uid: "6",
+    title: "Run Out of the Season",
+    description: "Lightning quick throw by Storm Surfers fielder",
+    youtube_video_id: "dQw4w9WgXcQ",
+    video_type: "Short",
+    category: "Best Catches",
+    publish_date: "2025-12-10",
+    views: 8000,
+    duration: 20,
+    is_featured: false,
   },
 ];
 
-// Mock images for lightbox demo
-const sampleImages = [
-  { id: 1, caption: "Opening ceremony fireworks" },
-  { id: 2, caption: "Team captains with trophy" },
-  { id: 3, caption: "Crowd at Vasai Sports Ground" },
-  { id: 4, caption: "Players during national anthem" },
-  { id: 5, caption: "Chief guest addressing the crowd" },
-  { id: 6, caption: "Team parade" },
-];
+// Helper to format views (for stats section)
+function formatViews(views: number): string {
+  if (views >= 1000000) {
+    return `${(views / 1000000).toFixed(1)}M`;
+  }
+  if (views >= 1000) {
+    return `${(views / 1000).toFixed(1)}K`;
+  }
+  return views.toString();
+}
 
-export default function GalleryPage() {
-  const [selectedGallery, setSelectedGallery] = useState<string | null>(null);
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+export const revalidate = 60;
 
-  const openGallery = (galleryId: string) => {
-    setSelectedGallery(galleryId);
-    setLightboxIndex(0);
-  };
+export default async function GalleryPage() {
+  let videos: Video[] = fallbackVideos;
 
-  const closeLightbox = () => {
-    setLightboxIndex(null);
-    setSelectedGallery(null);
-  };
-
-  const nextImage = () => {
-    if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex + 1) % sampleImages.length);
+  try {
+    const contentstackVideos = await getAllVideos();
+    if (contentstackVideos && contentstackVideos.length > 0) {
+      videos = contentstackVideos;
     }
-  };
+  } catch (error) {
+    console.error("Error fetching videos from Contentstack:", error);
+  }
 
-  const prevImage = () => {
-    if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex - 1 + sampleImages.length) % sampleImages.length);
-    }
-  };
+  // Get unique categories
+  const categories = Array.from(new Set(videos.map((v) => v.category).filter(Boolean)));
+
+  // Separate featured and shorts
+  const featuredVideos = videos.filter((v) => v.is_featured);
+  const shortVideos = videos.filter((v) => v.video_type === "Short");
+
+  // Stats
+  const totalViews = videos.reduce((sum, v) => sum + (v.views || 0), 0);
 
   return (
     <div className="pt-20 min-h-screen">
@@ -98,180 +121,130 @@ export default function GalleryPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-display text-5xl md:text-6xl tracking-wider text-white mb-4">
-              PHOTO <span className="gradient-text">GALLERY</span>
+              VIDEO <span className="gradient-text">GALLERY</span>
             </h1>
             <p className="text-xl text-dark-400 max-w-2xl mx-auto">
-              Capturing the best moments from OCPL matches and events
+              Watch the best moments from OCPL - catches, sixes, wickets, and more!
             </p>
           </div>
         </div>
       </section>
 
-      {/* Galleries Grid */}
-      <section className="py-16">
+      {/* Stats */}
+      <section className="py-8 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {galleries.map((gallery, index) => (
-              <button
-                key={gallery.id}
-                onClick={() => openGallery(gallery.id)}
-                className="card group overflow-hidden text-left stagger-item"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                {/* Cover Image Placeholder */}
-                <div
-                  className="h-56 relative flex items-center justify-center"
-                  style={{
-                    background: `linear-gradient(135deg, ${gallery.coverColor}40 0%, ${gallery.coverColor}20 100%)`,
-                  }}
-                >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <ImageIcon className="w-16 h-16 text-white/20" />
-                  </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <span className="px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white font-medium">
-                      View Gallery
-                    </span>
-                  </div>
-                  <div className="absolute bottom-4 right-4 px-3 py-1 rounded-full bg-black/50 backdrop-blur-sm">
-                    <span className="text-white text-sm font-medium">
-                      {gallery.imageCount} photos
-                    </span>
-                  </div>
-                </div>
-
-                {/* Gallery Info */}
-                <div className="p-5">
-                  <div className="flex items-center gap-2 text-dark-500 text-sm mb-2">
-                    <Calendar className="w-4 h-4" />
-                    {gallery.date}
-                  </div>
-                  <h3 className="font-semibold text-white text-lg mb-1 group-hover:text-primary-500 transition-colors">
-                    {gallery.title}
-                  </h3>
-                  <p className="text-dark-400 text-sm">{gallery.description}</p>
-                </div>
-              </button>
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="flex items-center justify-center gap-3">
+              <Play className="w-6 h-6 text-primary-500" />
+              <div>
+                <p className="font-display text-2xl text-white">{videos.length}</p>
+                <p className="text-dark-500 text-sm">Videos</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-3">
+              <Eye className="w-6 h-6 text-secondary-500" />
+              <div>
+                <p className="font-display text-2xl text-white">{formatViews(totalViews)}</p>
+                <p className="text-dark-500 text-sm">Total Views</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-3">
+              <Clock className="w-6 h-6 text-accent-500" />
+              <div>
+                <p className="font-display text-2xl text-white">{shortVideos.length}</p>
+                <p className="text-dark-500 text-sm">Shorts</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-3">
+              <Filter className="w-6 h-6 text-purple-500" />
+              <div>
+                <p className="font-display text-2xl text-white">{categories.length}</p>
+                <p className="text-dark-500 text-sm">Categories</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
+      {/* Featured Videos */}
+      {featuredVideos.length > 0 && (
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="font-display text-3xl tracking-wider text-white mb-8">
+              FEATURED <span className="text-primary-500">VIDEOS</span>
+            </h2>
+            <VideoGrid videos={featuredVideos} />
+          </div>
+        </section>
+      )}
+
+      {/* YouTube Shorts Section */}
       <section className="py-16 bg-dark-950/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <p className="font-display text-5xl gradient-text mb-2">
-                {galleries.length}
-              </p>
-              <p className="text-dark-400">Galleries</p>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-lg bg-red-500 flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/>
+              </svg>
             </div>
-            <div>
-              <p className="font-display text-5xl text-primary-500 mb-2">
-                {galleries.reduce((sum, g) => sum + g.imageCount, 0)}+
-              </p>
-              <p className="text-dark-400">Photos</p>
-            </div>
-            <div>
-              <p className="font-display text-5xl text-secondary-500 mb-2">5</p>
-              <p className="text-dark-400">Seasons Covered</p>
-            </div>
-            <div>
-              <p className="font-display text-5xl text-accent-500 mb-2">100+</p>
-              <p className="text-dark-400">Events</p>
-            </div>
+            <h2 className="font-display text-3xl tracking-wider text-white">
+              YOUTUBE <span className="text-red-500">SHORTS</span>
+            </h2>
           </div>
+          
+          <p className="text-dark-400 mb-8">
+            Quick highlights and best moments in vertical format - perfect for mobile viewing!
+          </p>
+
+          <VideoGrid 
+            videos={shortVideos} 
+            isShorts={true}
+          />
         </div>
       </section>
 
-      {/* Video Highlights Section */}
+      {/* All Videos by Category */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-3xl tracking-wider text-white text-center mb-12">
-            VIDEO HIGHLIGHTS
+          <h2 className="font-display text-3xl tracking-wider text-white mb-8">
+            ALL <span className="text-secondary-500">VIDEOS</span>
           </h2>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { title: "Best Catches of OCPL 2024", views: "12K" },
-              { title: "Top 10 Sixes - Season 4", views: "8.5K" },
-              { title: "Final Match Highlights", views: "25K" },
-            ].map((video, index) => (
-              <div
-                key={index}
-                className="card overflow-hidden group cursor-pointer stagger-item"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="h-44 bg-gradient-to-br from-primary-500/20 to-dark-800 relative flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-primary-500 transition-colors">
-                    <svg
-                      className="w-8 h-8 text-white ml-1"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-white group-hover:text-primary-500 transition-colors">
-                    {video.title}
-                  </h3>
-                  <p className="text-dark-500 text-sm">{video.views} views</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          
+          <VideoGrid 
+            videos={videos} 
+            showCategories={true}
+            categories={categories as string[]}
+          />
         </div>
       </section>
 
-      {/* Lightbox */}
-      {lightboxIndex !== null && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
-          {/* Close button */}
-          <button
-            onClick={closeLightbox}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-          >
-            <X className="w-6 h-6 text-white" />
-          </button>
-
-          {/* Navigation */}
-          <button
-            onClick={prevImage}
-            className="absolute left-4 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-          >
-            <ChevronLeft className="w-6 h-6 text-white" />
-          </button>
-
-          <button
-            onClick={nextImage}
-            className="absolute right-4 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-          >
-            <ChevronRight className="w-6 h-6 text-white" />
-          </button>
-
-          {/* Image */}
-          <div className="max-w-4xl w-full px-16">
-            <div className="aspect-video bg-gradient-to-br from-primary-500/30 to-secondary-500/20 rounded-lg flex items-center justify-center">
-              <div className="text-center">
-                <ImageIcon className="w-24 h-24 text-white/20 mx-auto mb-4" />
-                <p className="text-white/50">Image placeholder</p>
-              </div>
-            </div>
-            <div className="mt-4 text-center">
-              <p className="text-white font-medium">
-                {sampleImages[lightboxIndex].caption}
-              </p>
-              <p className="text-dark-500 text-sm mt-1">
-                {lightboxIndex + 1} of {sampleImages.length}
-              </p>
-            </div>
+      {/* Subscribe CTA */}
+      <section className="py-16 bg-gradient-to-r from-red-500/20 via-transparent to-red-500/20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="w-20 h-20 rounded-full bg-red-500 flex items-center justify-center mx-auto mb-6">
+            <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/>
+            </svg>
           </div>
+          <h2 className="font-display text-3xl md:text-4xl tracking-wider text-white mb-4">
+            SUBSCRIBE FOR MORE
+          </h2>
+          <p className="text-dark-300 mb-8 max-w-2xl mx-auto">
+            Follow OCPL on YouTube for the latest highlights, interviews, and behind-the-scenes content
+          </p>
+          <a
+            href="https://youtube.com/@ocpl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full transition-colors"
+          >
+            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/>
+            </svg>
+            Subscribe on YouTube
+          </a>
         </div>
-      )}
+      </section>
     </div>
   );
 }
-

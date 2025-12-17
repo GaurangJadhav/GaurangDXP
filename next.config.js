@@ -5,6 +5,8 @@ const nextConfig = {
       "images.contentstack.io",
       "assets.contentstack.io",
       "eu-images.contentstack.com",
+      "img.youtube.com",
+      "i.ytimg.com",
     ],
   },
   env: {

@@ -269,3 +269,18 @@ export interface NavItem {
   children?: NavItem[];
 }
 
+// Video Content Type
+export interface Video {
+  uid: string;
+  title: string;
+  description?: string;
+  youtube_video_id: string;
+  video_type?: string;
+  category?: string;
+  thumbnail_url?: string;
+  publish_date?: string;
+  views?: number;
+  duration?: number;
+  is_featured?: boolean;
+}
+
