@@ -1,5 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Instagram, Twitter, Youtube, Mail, MapPin, Phone } from "lucide-react";
+import { siteConfig } from "@/lib/site-config";
 
 const quickLinks = [
   { label: "Matches", href: "/matches" },
@@ -11,10 +13,10 @@ const quickLinks = [
 ];
 
 const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Youtube, href: "#", label: "YouTube" },
+  { icon: Facebook, href: siteConfig.social.facebook, label: "Facebook" },
+  { icon: Instagram, href: siteConfig.social.instagram, label: "Instagram" },
+  { icon: Twitter, href: siteConfig.social.twitter, label: "Twitter" },
+  { icon: Youtube, href: siteConfig.social.youtube, label: "YouTube" },
 ];
 
 export default function Footer() {
@@ -26,22 +28,27 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
-                <span className="font-display text-2xl text-white">O</span>
+              <div className="w-12 h-12 rounded-full overflow-hidden bg-white/10">
+                <Image
+                  src={siteConfig.logo.url}
+                  alt={siteConfig.logo.alt}
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-cover"
+                  unoptimized
+                />
               </div>
               <div className="flex flex-col">
                 <span className="font-display text-2xl tracking-wider gradient-text">
-                  OCPL
+                  {siteConfig.name}
                 </span>
                 <span className="text-[10px] text-dark-400 uppercase tracking-widest">
-                  Only Cricket League
+                  {siteConfig.fullName}
                 </span>
               </div>
             </div>
             <p className="text-dark-400 text-sm leading-relaxed mb-6">
-              A league played in Vasai between local players. This league consists of 
-              players from all age groups, from various walks of life who love to enjoy 
-              this beautiful game.
+              {siteConfig.description}
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -85,26 +92,26 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" />
                 <span className="text-dark-400 text-sm">
-                  Vasai West, Palghar District,<br />
-                  Maharashtra, India
+                  {siteConfig.contact.address.line1}<br />
+                  {siteConfig.contact.address.line2}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-primary-500 flex-shrink-0" />
                 <a
-                  href="mailto:info@ocpl.in"
+                  href={`mailto:${siteConfig.contact.email}`}
                   className="text-dark-400 hover:text-primary-500 transition-colors text-sm"
                 >
-                  info@ocpl.in
+                  {siteConfig.contact.email}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-primary-500 flex-shrink-0" />
                 <a
-                  href="tel:+919876543210"
+                  href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
                   className="text-dark-400 hover:text-primary-500 transition-colors text-sm"
                 >
-                  +91 98765 43210
+                  {siteConfig.contact.phone}
                 </a>
               </li>
             </ul>
@@ -138,7 +145,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-dark-500 text-sm">
-              © {new Date().getFullYear()} OCPL - Only Cricket League. All rights reserved.
+              © {new Date().getFullYear()} {siteConfig.name} - {siteConfig.fullName}. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link
@@ -160,4 +167,3 @@ export default function Footer() {
     </footer>
   );
 }
-

@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Trophy, Users, Calendar, BarChart3, Newspaper, Image } from "lucide-react";
+import Image from "next/image";
+import { Menu, X, Trophy, Users, Calendar, BarChart3, Newspaper, Image as ImageIcon } from "lucide-react";
+import { siteConfig } from "@/lib/site-config";
 
 const navItems = [
   { label: "Matches", href: "/matches", icon: Calendar },
@@ -10,7 +12,7 @@ const navItems = [
   { label: "Players", href: "/players", icon: Trophy },
   { label: "Points Table", href: "/points-table", icon: BarChart3 },
   { label: "News", href: "/news", icon: Newspaper },
-  { label: "Gallery", href: "/gallery", icon: Image },
+  { label: "Gallery", href: "/gallery", icon: ImageIcon },
 ];
 
 export default function Header() {
@@ -22,15 +24,22 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-              <span className="font-display text-2xl text-white">O</span>
+            <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg group-hover:scale-105 transition-transform bg-white/10">
+              <Image
+                src={siteConfig.logo.url}
+                alt={siteConfig.logo.alt}
+                width={48}
+                height={48}
+                className="w-full h-full object-cover"
+                unoptimized
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-display text-2xl tracking-wider gradient-text">
-                OCPL
+                {siteConfig.name}
               </span>
               <span className="text-[10px] text-dark-400 uppercase tracking-widest">
-                Only Cricket League
+                {siteConfig.fullName}
               </span>
             </div>
           </Link>
@@ -53,7 +62,7 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-4">
             <div className="px-4 py-2 rounded-full bg-primary-500/20 border border-primary-500/30">
               <span className="text-primary-400 font-semibold text-sm">
-                Season 2025
+                Season {siteConfig.season.year}
               </span>
             </div>
           </div>
@@ -90,7 +99,7 @@ export default function Header() {
             <div className="mt-4 pt-4 border-t border-white/5">
               <div className="px-4 py-2 rounded-full bg-primary-500/20 border border-primary-500/30 text-center">
                 <span className="text-primary-400 font-semibold text-sm">
-                  Season 2025
+                  Season {siteConfig.season.year}
                 </span>
               </div>
             </div>
@@ -100,4 +109,3 @@ export default function Header() {
     </header>
   );
 }
-

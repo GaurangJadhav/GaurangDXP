@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { TEAM_LOGOS, getAllTeamLogos } from "@/lib/team-logos";
 import { getAllTeams, getUpcomingMatches, getLatestNews } from "@/lib/contentstack";
+import { siteConfig } from "@/lib/site-config";
 import CountdownTimer from "@/components/CountdownTimer";
 
 // Fallback mock data
@@ -191,16 +192,29 @@ export default async function HomePage() {
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500/20 border border-primary-500/30 mb-8 animate-fade-in">
               <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
               <span className="text-primary-400 text-sm font-medium">
-                Season 5 • Now Live
+                Season {siteConfig.season.number} • {siteConfig.season.status}
               </span>
+            </div>
+
+            {/* Logo */}
+            <div className="mb-6 animate-slide-up">
+              <Image
+                src={siteConfig.logo.url}
+                alt={siteConfig.logo.alt}
+                width={180}
+                height={180}
+                className="mx-auto rounded-full shadow-2xl shadow-primary-500/20"
+                unoptimized
+                priority
+              />
             </div>
 
             {/* Main Heading */}
             <h1 className="font-display text-6xl md:text-8xl lg:text-9xl tracking-wider mb-6 animate-slide-up">
-              <span className="gradient-text">OCPL</span>
+              <span className="gradient-text">{siteConfig.name}</span>
             </h1>
             <p className="font-display text-2xl md:text-3xl lg:text-4xl text-white/90 tracking-wide mb-4">
-              ONLY CRICKET LEAGUE
+              {siteConfig.fullName.toUpperCase()}
             </p>
             <p className="text-lg md:text-xl text-dark-400 max-w-2xl mx-auto mb-12">
               Vasai&apos;s premier cricket tournament bringing together players from all 
