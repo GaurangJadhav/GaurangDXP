@@ -2,6 +2,9 @@ import { Play, Eye, Clock, Filter } from "lucide-react";
 import { getAllVideos } from "@/lib/contentstack";
 import VideoGrid from "@/components/VideoGrid";
 import { Video } from "@/types/contentstack";
+import { Locale, isValidLocale } from "@/lib/i18n/config";
+import { getTranslation } from "@/lib/i18n/translations";
+import { notFound } from "next/navigation";
 
 // Fallback mock data with placeholder YouTube IDs
 const fallbackVideos: Video[] = [
@@ -92,7 +95,18 @@ function formatViews(views: number): string {
 
 export const revalidate = 60;
 
-export default async function GalleryPage() {
+interface PageProps {
+  params: { locale: string };
+}
+
+export default async function GalleryPage({ params }: PageProps) {
+  if (!isValidLocale(params.locale)) {
+    notFound();
+  }
+  
+  const locale = params.locale as Locale;
+  const t = (key: Parameters<typeof getTranslation>[1]) => getTranslation(locale, key);
+  
   let videos: Video[] = fallbackVideos;
 
   try {
@@ -121,10 +135,10 @@ export default async function GalleryPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-display text-5xl md:text-6xl tracking-wider text-white mb-4">
-              VIDEO <span className="gradient-text">GALLERY</span>
+              {t("gallery.title").toUpperCase().split(" ")[0]} <span className="gradient-text">{t("gallery.title").toUpperCase().split(" ").slice(1).join(" ")}</span>
             </h1>
             <p className="text-xl text-dark-400 max-w-2xl mx-auto">
-              Watch the best moments from OCPL - catches, sixes, wickets, and more!
+              {t("gallery.subtitle")}
             </p>
           </div>
         </div>
@@ -171,7 +185,7 @@ export default async function GalleryPage() {
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-display text-3xl tracking-wider text-white mb-8">
-              FEATURED <span className="text-primary-500">VIDEOS</span>
+              {t("gallery.featured").toUpperCase()}
             </h2>
             <VideoGrid videos={featuredVideos} />
           </div>
@@ -188,7 +202,7 @@ export default async function GalleryPage() {
               </svg>
             </div>
             <h2 className="font-display text-3xl tracking-wider text-white">
-              YOUTUBE <span className="text-red-500">SHORTS</span>
+              {t("gallery.shorts").toUpperCase()}
             </h2>
           </div>
           
@@ -207,7 +221,7 @@ export default async function GalleryPage() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="font-display text-3xl tracking-wider text-white mb-8">
-            ALL <span className="text-secondary-500">VIDEOS</span>
+            {t("gallery.allVideos").toUpperCase()}
           </h2>
           
           <VideoGrid 
@@ -227,10 +241,10 @@ export default async function GalleryPage() {
             </svg>
           </div>
           <h2 className="font-display text-3xl md:text-4xl tracking-wider text-white mb-4">
-            SUBSCRIBE FOR MORE
+            {t("gallery.subscribe").toUpperCase()}
           </h2>
           <p className="text-dark-300 mb-8 max-w-2xl mx-auto">
-            Follow OCPL on YouTube for the latest highlights, interviews, and behind-the-scenes content
+            {t("gallery.subscribeText")}
           </p>
           <a
             href="https://youtube.com/@ocpl"

@@ -5,25 +5,33 @@ import Link from "next/link";
 import Image from "next/image";
 import { Menu, X, Trophy, Users, Calendar, BarChart3, Newspaper, Image as ImageIcon } from "lucide-react";
 import { siteConfig } from "@/lib/site-config";
+import { Locale, defaultLocale } from "@/lib/i18n/config";
+import { getTranslation } from "@/lib/i18n/translations";
+import LanguageSwitcher from "./LanguageSwitcher";
 
-const navItems = [
-  { label: "Matches", href: "/matches", icon: Calendar },
-  { label: "Teams", href: "/teams", icon: Users },
-  { label: "Players", href: "/players", icon: Trophy },
-  { label: "Points Table", href: "/points-table", icon: BarChart3 },
-  { label: "News", href: "/news", icon: Newspaper },
-  { label: "Gallery", href: "/gallery", icon: ImageIcon },
-];
+interface HeaderProps {
+  locale?: Locale;
+}
 
-export default function Header() {
+export default function Header({ locale = defaultLocale }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const t = (key: Parameters<typeof getTranslation>[1]) => getTranslation(locale, key);
+
+  const navItems = [
+    { label: t("nav.matches"), href: `/${locale}/matches`, icon: Calendar },
+    { label: t("nav.teams"), href: `/${locale}/teams`, icon: Users },
+    { label: t("nav.players"), href: `/${locale}/players`, icon: Trophy },
+    { label: t("nav.pointsTable"), href: `/${locale}/points-table`, icon: BarChart3 },
+    { label: t("nav.news"), href: `/${locale}/news`, icon: Newspaper },
+    { label: t("nav.gallery"), href: `/${locale}/gallery`, icon: ImageIcon },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass-dark">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href={`/${locale}`} className="flex items-center gap-3 group">
             <div className="w-12 h-12 rounded-full overflow-hidden shadow-lg group-hover:scale-105 transition-transform bg-white/10">
               <Image
                 src={siteConfig.logo.url}
@@ -58,8 +66,9 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Season Badge */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Language Switcher & Season Badge */}
+          <div className="hidden md:flex items-center gap-3">
+            <LanguageSwitcher currentLocale={locale} />
             <div className="px-4 py-2 rounded-full bg-primary-500/20 border border-primary-500/30">
               <span className="text-primary-400 font-semibold text-sm">
                 Season {siteConfig.season.year}
@@ -96,7 +105,10 @@ export default function Header() {
                 <span className="font-medium">{item.label}</span>
               </Link>
             ))}
-            <div className="mt-4 pt-4 border-t border-white/5">
+            <div className="mt-4 pt-4 border-t border-white/5 space-y-3">
+              <div className="px-4">
+                <LanguageSwitcher currentLocale={locale} />
+              </div>
               <div className="px-4 py-2 rounded-full bg-primary-500/20 border border-primary-500/30 text-center">
                 <span className="text-primary-400 font-semibold text-sm">
                   Season {siteConfig.season.year}

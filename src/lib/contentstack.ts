@@ -26,11 +26,24 @@ const handleError = (error: unknown, context: string) => {
   throw error;
 };
 
+// Map website locale to Contentstack locale code
+const localeMap: Record<string, string> = {
+  en: "en-us",
+  hi: "hi-in",
+  mr: "mr-in",
+};
+
+function getContentstackLocale(locale?: string): string {
+  return locale ? localeMap[locale] || "en-us" : "en-us";
+}
+
 // ==================== TEAMS ====================
-export async function getAllTeams(): Promise<Team[]> {
+export async function getAllTeams(locale?: string): Promise<Team[]> {
   try {
-    const result = await Stack.ContentType("team")
-      .Query()
+    const query = Stack.ContentType("team").Query();
+    query.language(getContentstackLocale(locale));
+    
+    const result = await query
       .includeReference(["captain"])
       .toJSON()
       .find();

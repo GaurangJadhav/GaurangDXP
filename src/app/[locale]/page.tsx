@@ -14,6 +14,9 @@ import { TEAM_LOGOS, getAllTeamLogos } from "@/lib/team-logos";
 import { getAllTeams, getUpcomingMatches, getLatestNews } from "@/lib/contentstack";
 import { siteConfig } from "@/lib/site-config";
 import CountdownTimer from "@/components/CountdownTimer";
+import { Locale, isValidLocale } from "@/lib/i18n/config";
+import { getTranslation } from "@/lib/i18n/translations";
+import { notFound } from "next/navigation";
 
 // Fallback mock data
 const fallbackTeams = getAllTeamLogos().map((team, index) => ({
@@ -100,7 +103,17 @@ function getTeamLogoData(shortName: string) {
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function HomePage() {
+interface PageProps {
+  params: { locale: string };
+}
+
+export default async function HomePage({ params }: PageProps) {
+  if (!isValidLocale(params.locale)) {
+    notFound();
+  }
+  
+  const locale = params.locale as Locale;
+  const t = (key: Parameters<typeof getTranslation>[1]) => getTranslation(locale, key);
   const nextMatchDate = new Date("2025-12-20T16:00:00");
 
   // Fetch data from Contentstack
@@ -233,14 +246,14 @@ export default async function HomePage() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/matches" className="btn-primary inline-flex items-center gap-2">
+              <Link href={`/${locale}/matches`} className="btn-primary inline-flex items-center gap-2">
                 <Calendar className="w-5 h-5" />
-                View Schedule
+                {t("hero.cta.schedule")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link href="/teams" className="btn-secondary inline-flex items-center gap-2">
+              <Link href={`/${locale}/teams`} className="btn-secondary inline-flex items-center gap-2">
                 <Users className="w-5 h-5" />
-                Explore Teams
+                {t("hero.cta.teams")}
               </Link>
             </div>
           </div>
@@ -286,15 +299,15 @@ export default async function HomePage() {
           <div className="flex items-center justify-between mb-12">
             <div>
               <h2 className="font-display text-3xl md:text-4xl tracking-wider text-white mb-2">
-                UPCOMING MATCHES
+                {t("section.upcomingMatches").toUpperCase()}
               </h2>
               <p className="text-dark-400">Don&apos;t miss the action</p>
             </div>
             <Link
-              href="/matches"
+              href={`/${locale}/matches`}
               className="hidden md:flex items-center gap-2 text-primary-500 hover:text-primary-400 transition-colors"
             >
-              View All
+              {t("section.viewAll")}
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -391,10 +404,10 @@ export default async function HomePage() {
 
           <div className="mt-8 text-center md:hidden">
             <Link
-              href="/matches"
+              href={`/${locale}/matches`}
               className="inline-flex items-center gap-2 text-primary-500"
             >
-              View All Matches
+              {t("section.viewSchedule")}
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -406,7 +419,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="font-display text-3xl md:text-4xl tracking-wider text-white mb-2">
-              THE TEAMS
+              {t("section.featuredTeams").toUpperCase()}
             </h2>
             <p className="text-dark-400">Six teams battling for glory</p>
           </div>
@@ -415,7 +428,7 @@ export default async function HomePage() {
             {teams.map((team, index) => (
               <Link
                 key={team.id}
-                href={`/teams/${team.shortName.toLowerCase()}`}
+                href={`/${locale}/teams/${team.shortName.toLowerCase()}`}
                 className="card p-6 text-center group stagger-item"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -449,8 +462,8 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-12 text-center">
-            <Link href="/teams" className="btn-secondary inline-flex items-center gap-2">
-              View All Teams
+            <Link href={`/${locale}/teams`} className="btn-secondary inline-flex items-center gap-2">
+              {t("section.allTeams")}
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -463,15 +476,15 @@ export default async function HomePage() {
           <div className="flex items-center justify-between mb-12">
             <div>
               <h2 className="font-display text-3xl md:text-4xl tracking-wider text-white mb-2">
-                LATEST NEWS
+                {t("section.latestNews").toUpperCase()}
               </h2>
               <p className="text-dark-400">Stay updated with OCPL</p>
             </div>
             <Link
-              href="/news"
+              href={`/${locale}/news`}
               className="hidden md:flex items-center gap-2 text-primary-500 hover:text-primary-400 transition-colors"
             >
-              View All
+              {t("section.viewAll")}
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
@@ -503,7 +516,7 @@ export default async function HomePage() {
                     {article.excerpt}
                   </p>
                   <Link
-                    href={`/news/${article.id}`}
+                    href={`/${locale}/news/${article.id}`}
                     className="inline-flex items-center gap-2 text-primary-500 text-sm mt-4 group-hover:gap-3 transition-all"
                   >
                     Read More
@@ -530,13 +543,13 @@ export default async function HomePage() {
             Vasai&apos;s biggest cricket celebration
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/matches" className="btn-primary inline-flex items-center gap-2">
+            <Link href={`/${locale}/matches`} className="btn-primary inline-flex items-center gap-2">
               <Calendar className="w-5 h-5" />
-              Match Schedule
+              {t("hero.cta.schedule")}
             </Link>
-            <Link href="/gallery" className="btn-secondary inline-flex items-center gap-2">
+            <Link href={`/${locale}/gallery`} className="btn-secondary inline-flex items-center gap-2">
               <Play className="w-5 h-5" />
-              Watch Highlights
+              {t("gallery.title")}
             </Link>
           </div>
         </div>

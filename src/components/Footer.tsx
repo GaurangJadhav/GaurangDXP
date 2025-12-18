@@ -2,24 +2,32 @@ import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Instagram, Twitter, Youtube, Mail, MapPin, Phone } from "lucide-react";
 import { siteConfig } from "@/lib/site-config";
+import { Locale, defaultLocale } from "@/lib/i18n/config";
+import { getTranslation } from "@/lib/i18n/translations";
 
-const quickLinks = [
-  { label: "Matches", href: "/matches" },
-  { label: "Teams", href: "/teams" },
-  { label: "Players", href: "/players" },
-  { label: "Points Table", href: "/points-table" },
-  { label: "News", href: "/news" },
-  { label: "Gallery", href: "/gallery" },
-];
+interface FooterProps {
+  locale?: Locale;
+}
 
-const socialLinks = [
-  { icon: Facebook, href: siteConfig.social.facebook, label: "Facebook" },
-  { icon: Instagram, href: siteConfig.social.instagram, label: "Instagram" },
-  { icon: Twitter, href: siteConfig.social.twitter, label: "Twitter" },
-  { icon: Youtube, href: siteConfig.social.youtube, label: "YouTube" },
-];
+export default function Footer({ locale = defaultLocale }: FooterProps) {
+  const t = (key: Parameters<typeof getTranslation>[1]) => getTranslation(locale, key);
 
-export default function Footer() {
+  const quickLinks = [
+    { label: t("nav.matches"), href: `/${locale}/matches` },
+    { label: t("nav.teams"), href: `/${locale}/teams` },
+    { label: t("nav.players"), href: `/${locale}/players` },
+    { label: t("nav.pointsTable"), href: `/${locale}/points-table` },
+    { label: t("nav.news"), href: `/${locale}/news` },
+    { label: t("nav.gallery"), href: `/${locale}/gallery` },
+  ];
+
+  const socialLinks = [
+    { icon: Facebook, href: siteConfig.social.facebook, label: "Facebook" },
+    { icon: Instagram, href: siteConfig.social.instagram, label: "Instagram" },
+    { icon: Twitter, href: siteConfig.social.twitter, label: "Twitter" },
+    { icon: Youtube, href: siteConfig.social.youtube, label: "YouTube" },
+  ];
+
   return (
     <footer className="bg-dark-950 border-t border-white/5">
       {/* Main Footer */}
@@ -48,7 +56,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-dark-400 text-sm leading-relaxed mb-6">
-              {siteConfig.description}
+              {t("footer.tagline")}
             </p>
             <div className="flex gap-3">
               {socialLinks.map((social) => (
@@ -67,7 +75,7 @@ export default function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="font-display text-lg tracking-wider text-white mb-6">
-              QUICK LINKS
+              {t("footer.quickLinks").toUpperCase()}
             </h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
@@ -86,7 +94,7 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h3 className="font-display text-lg tracking-wider text-white mb-6">
-              CONTACT US
+              {t("footer.contact").toUpperCase()}
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
@@ -117,10 +125,10 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Sponsors */}
+          {/* Follow Us */}
           <div>
             <h3 className="font-display text-lg tracking-wider text-white mb-6">
-              SPONSORS
+              {t("footer.followUs").toUpperCase()}
             </h3>
             <div className="space-y-4">
               <div className="p-4 rounded-lg bg-white/5 border border-white/10">
@@ -145,17 +153,17 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-dark-500 text-sm">
-              © {new Date().getFullYear()} {siteConfig.name} - {siteConfig.fullName}. All rights reserved.
+              {t("footer.copyright")}
             </p>
             <div className="flex gap-6">
               <Link
-                href="/privacy"
+                href={`/${locale}/privacy`}
                 className="text-dark-500 hover:text-primary-500 transition-colors text-sm"
               >
                 Privacy Policy
               </Link>
               <Link
-                href="/terms"
+                href={`/${locale}/terms`}
                 className="text-dark-500 hover:text-primary-500 transition-colors text-sm"
               >
                 Terms & Conditions
