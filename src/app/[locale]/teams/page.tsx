@@ -3,6 +3,9 @@ import Image from "next/image";
 import { Trophy, Users, TrendingUp, Award } from "lucide-react";
 import { getAllTeams } from "@/lib/contentstack";
 import { TEAM_LOGOS, getAllTeamLogos } from "@/lib/team-logos";
+import { Locale, isValidLocale } from "@/lib/i18n/config";
+import { getTranslation } from "@/lib/i18n/translations";
+import { notFound } from "next/navigation";
 
 // Fallback mock data in case Contentstack fetch fails
 const fallbackTeams = getAllTeamLogos().map((team, index) => ({
@@ -33,11 +36,22 @@ function getTeamColor(shortName: string): string {
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function TeamsPage() {
+interface PageProps {
+  params: { locale: string };
+}
+
+export default async function TeamsPage({ params }: PageProps) {
+  if (!isValidLocale(params.locale)) {
+    notFound();
+  }
+  
+  const locale = params.locale as Locale;
+  const t = (key: Parameters<typeof getTranslation>[1]) => getTranslation(locale, key);
+  
   let teams = fallbackTeams;
   
   try {
-    const contentstackTeams = await getAllTeams();
+    const contentstackTeams = await getAllTeams(locale);
     
     if (contentstackTeams && contentstackTeams.length > 0) {
       teams = contentstackTeams.map((team) => ({
@@ -71,7 +85,7 @@ export default async function TeamsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-display text-5xl md:text-6xl tracking-wider text-white mb-4">
-              THE <span className="gradient-text">TEAMS</span>
+              {t("nav.teams").toUpperCase()}
             </h1>
             <p className="text-xl text-dark-400 max-w-2xl mx-auto">
               Six franchises battling for glory in Vasai&apos;s premier cricket league

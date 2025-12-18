@@ -2,6 +2,9 @@ import Image from "next/image";
 import { Trophy, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { TEAM_LOGOS } from "@/lib/team-logos";
 import { getPointsTable } from "@/lib/contentstack";
+import { Locale, isValidLocale } from "@/lib/i18n/config";
+import { getTranslation } from "@/lib/i18n/translations";
+import { notFound } from "next/navigation";
 
 // Fallback mock data
 const fallbackPointsTable = [
@@ -130,7 +133,18 @@ function FormBadge({ result }: { result: string }) {
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function PointsTablePage() {
+interface PageProps {
+  params: { locale: string };
+}
+
+export default async function PointsTablePage({ params }: PageProps) {
+  if (!isValidLocale(params.locale)) {
+    notFound();
+  }
+  
+  const locale = params.locale as Locale;
+  const t = (key: Parameters<typeof getTranslation>[1]) => getTranslation(locale, key);
+  
   let pointsTable = fallbackPointsTable;
 
   try {
@@ -173,7 +187,7 @@ export default async function PointsTablePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="font-display text-5xl md:text-6xl tracking-wider text-white mb-4">
-              POINTS <span className="gradient-text">TABLE</span>
+              {t("nav.pointsTable").toUpperCase()}
             </h1>
             <p className="text-xl text-dark-400 max-w-2xl mx-auto">
               OCPL 2025 Season Standings
