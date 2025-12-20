@@ -14,8 +14,9 @@ import { TEAM_LOGOS, getAllTeamLogos } from "@/lib/team-logos";
 import { getAllTeams, getUpcomingMatches, getLatestNews } from "@/lib/contentstack";
 import { siteConfig } from "@/lib/site-config";
 import CountdownTimer from "@/components/CountdownTimer";
+import JoinLeagueButton from "@/components/JoinLeagueButton";
 import { Locale, isValidLocale } from "@/lib/i18n/config";
-import { getTranslation } from "@/lib/i18n/translations";
+import { getTranslation, getJoinLeagueTranslations } from "@/lib/i18n/translations";
 import { notFound } from "next/navigation";
 
 // Fallback mock data
@@ -114,6 +115,7 @@ export default async function HomePage({ params }: PageProps) {
   
   const locale = params.locale as Locale;
   const t = (key: Parameters<typeof getTranslation>[1]) => getTranslation(locale, key);
+  const joinLeagueTranslations = getJoinLeagueTranslations(locale);
   const nextMatchDate = new Date("2025-12-20T16:00:00");
 
   // Fetch data from Contentstack
@@ -245,7 +247,8 @@ export default async function HomePage({ params }: PageProps) {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <JoinLeagueButton translations={joinLeagueTranslations} variant="hero" />
               <Link href={`/${locale}/matches`} className="btn-primary inline-flex items-center gap-2">
                 <Calendar className="w-5 h-5" />
                 {t("hero.cta.schedule")}

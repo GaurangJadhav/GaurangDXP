@@ -294,5 +294,208 @@ export function useTranslations(locale: Locale) {
   };
 }
 
+// Join League Form translations
+const joinLeagueTranslations: Record<Locale, {
+  buttonText: string;
+  modal: {
+    title: string;
+    subtitle: string;
+    personalInfo: string;
+    cricketInfo: string;
+    name: string;
+    namePlaceholder: string;
+    email: string;
+    emailPlaceholder: string;
+    phone: string;
+    phonePlaceholder: string;
+    dateOfBirth: string;
+    address: string;
+    addressPlaceholder: string;
+    preferredRole: string;
+    selectRole: string;
+    batsman: string;
+    bowler: string;
+    allRounder: string;
+    wicketKeeper: string;
+    battingStyle: string;
+    selectBattingStyle: string;
+    rightHanded: string;
+    leftHanded: string;
+    bowlingStyle: string;
+    selectBowlingStyle: string;
+    fastBowler: string;
+    mediumPacer: string;
+    spinBowler: string;
+    none: string;
+    experience: string;
+    experiencePlaceholder: string;
+    preferredTeam: string;
+    selectTeam: string;
+    anyTeam: string;
+    previousTeams: string;
+    previousTeamsPlaceholder: string;
+    achievements: string;
+    achievementsPlaceholder: string;
+    submit: string;
+    submitting: string;
+    successTitle: string;
+    successMessage: string;
+    close: string;
+    required: string;
+  };
+}> = {
+  en: {
+    buttonText: "Join The League",
+    modal: {
+      title: "Join OCPL",
+      subtitle: "Register as a player for Season 5",
+      personalInfo: "Personal Information",
+      cricketInfo: "Cricket Information",
+      name: "Full Name",
+      namePlaceholder: "Enter your full name",
+      email: "Email Address",
+      emailPlaceholder: "your.email@example.com",
+      phone: "Contact Number",
+      phonePlaceholder: "10-digit mobile number",
+      dateOfBirth: "Date of Birth",
+      address: "Address",
+      addressPlaceholder: "Your residential address",
+      preferredRole: "Preferred Role",
+      selectRole: "Select your role",
+      batsman: "Batsman",
+      bowler: "Bowler",
+      allRounder: "All-Rounder",
+      wicketKeeper: "Wicket Keeper",
+      battingStyle: "Batting Style",
+      selectBattingStyle: "Select batting style",
+      rightHanded: "Right-Handed",
+      leftHanded: "Left-Handed",
+      bowlingStyle: "Bowling Style",
+      selectBowlingStyle: "Select bowling style",
+      fastBowler: "Fast Bowler",
+      mediumPacer: "Medium Pacer",
+      spinBowler: "Spin Bowler",
+      none: "Don't Bowl",
+      experience: "Years of Experience",
+      experiencePlaceholder: "e.g., 5 years",
+      preferredTeam: "Preferred Team",
+      selectTeam: "Select a team",
+      anyTeam: "Any Team",
+      previousTeams: "Previous Teams",
+      previousTeamsPlaceholder: "Teams you've played for",
+      achievements: "Cricket Achievements",
+      achievementsPlaceholder: "Notable achievements, awards, records...",
+      submit: "Submit Registration",
+      submitting: "Submitting...",
+      successTitle: "Registration Successful!",
+      successMessage: "Thank you for registering. Our team will contact you shortly with further details.",
+      close: "Close",
+      required: "Required",
+    },
+  },
+  hi: {
+    buttonText: "लीग में शामिल हों",
+    modal: {
+      title: "OCPL में शामिल हों",
+      subtitle: "सीज़न 5 के लिए खिलाड़ी के रूप में पंजीकरण करें",
+      personalInfo: "व्यक्तिगत जानकारी",
+      cricketInfo: "क्रिकेट जानकारी",
+      name: "पूरा नाम",
+      namePlaceholder: "अपना पूरा नाम दर्ज करें",
+      email: "ईमेल पता",
+      emailPlaceholder: "your.email@example.com",
+      phone: "संपर्क नंबर",
+      phonePlaceholder: "10 अंकों का मोबाइल नंबर",
+      dateOfBirth: "जन्म तिथि",
+      address: "पता",
+      addressPlaceholder: "आपका आवासीय पता",
+      preferredRole: "पसंदीदा भूमिका",
+      selectRole: "अपनी भूमिका चुनें",
+      batsman: "बल्लेबाज",
+      bowler: "गेंदबाज",
+      allRounder: "ऑल-राउंडर",
+      wicketKeeper: "विकेट कीपर",
+      battingStyle: "बल्लेबाजी शैली",
+      selectBattingStyle: "बल्लेबाजी शैली चुनें",
+      rightHanded: "दाएं हाथ के",
+      leftHanded: "बाएं हाथ के",
+      bowlingStyle: "गेंदबाजी शैली",
+      selectBowlingStyle: "गेंदबाजी शैली चुनें",
+      fastBowler: "तेज गेंदबाज",
+      mediumPacer: "मध्यम तेज",
+      spinBowler: "स्पिन गेंदबाज",
+      none: "गेंदबाजी नहीं",
+      experience: "अनुभव के वर्ष",
+      experiencePlaceholder: "जैसे, 5 वर्ष",
+      preferredTeam: "पसंदीदा टीम",
+      selectTeam: "टीम चुनें",
+      anyTeam: "कोई भी टीम",
+      previousTeams: "पिछली टीमें",
+      previousTeamsPlaceholder: "जिन टीमों के लिए आपने खेला है",
+      achievements: "क्रिकेट उपलब्धियां",
+      achievementsPlaceholder: "उल्लेखनीय उपलब्धियां, पुरस्कार, रिकॉर्ड...",
+      submit: "पंजीकरण जमा करें",
+      submitting: "जमा हो रहा है...",
+      successTitle: "पंजीकरण सफल!",
+      successMessage: "पंजीकरण के लिए धन्यवाद। हमारी टीम जल्द ही आपसे संपर्क करेगी।",
+      close: "बंद करें",
+      required: "आवश्यक",
+    },
+  },
+  mr: {
+    buttonText: "लीगमध्ये सामील व्हा",
+    modal: {
+      title: "OCPL मध्ये सामील व्हा",
+      subtitle: "सीझन 5 साठी खेळाडू म्हणून नोंदणी करा",
+      personalInfo: "वैयक्तिक माहिती",
+      cricketInfo: "क्रिकेट माहिती",
+      name: "पूर्ण नाव",
+      namePlaceholder: "तुमचे पूर्ण नाव प्रविष्ट करा",
+      email: "ईमेल पत्ता",
+      emailPlaceholder: "your.email@example.com",
+      phone: "संपर्क क्रमांक",
+      phonePlaceholder: "10 अंकी मोबाइल क्रमांक",
+      dateOfBirth: "जन्म तारीख",
+      address: "पत्ता",
+      addressPlaceholder: "तुमचा निवासी पत्ता",
+      preferredRole: "पसंतीची भूमिका",
+      selectRole: "तुमची भूमिका निवडा",
+      batsman: "फलंदाज",
+      bowler: "गोलंदाज",
+      allRounder: "ऑल-राउंडर",
+      wicketKeeper: "यष्टिरक्षक",
+      battingStyle: "फलंदाजी शैली",
+      selectBattingStyle: "फलंदाजी शैली निवडा",
+      rightHanded: "उजव्या हाताचे",
+      leftHanded: "डाव्या हाताचे",
+      bowlingStyle: "गोलंदाजी शैली",
+      selectBowlingStyle: "गोलंदाजी शैली निवडा",
+      fastBowler: "वेगवान गोलंदाज",
+      mediumPacer: "मध्यम वेगवान",
+      spinBowler: "फिरकी गोलंदाज",
+      none: "गोलंदाजी नाही",
+      experience: "अनुभवाची वर्षे",
+      experiencePlaceholder: "उदा., 5 वर्षे",
+      preferredTeam: "पसंतीचा संघ",
+      selectTeam: "संघ निवडा",
+      anyTeam: "कोणताही संघ",
+      previousTeams: "मागील संघ",
+      previousTeamsPlaceholder: "तुम्ही खेळलेल्या संघांची नावे",
+      achievements: "क्रिकेट कामगिरी",
+      achievementsPlaceholder: "उल्लेखनीय कामगिरी, पुरस्कार, विक्रम...",
+      submit: "नोंदणी सबमिट करा",
+      submitting: "सबमिट होत आहे...",
+      successTitle: "नोंदणी यशस्वी!",
+      successMessage: "नोंदणीसाठी धन्यवाद. आमची टीम लवकरच तुमच्याशी संपर्क साधेल.",
+      close: "बंद करा",
+      required: "आवश्यक",
+    },
+  },
+};
+
+export function getJoinLeagueTranslations(locale: Locale) {
+  return joinLeagueTranslations[locale] || joinLeagueTranslations.en;
+}
+
 export type { TranslationKey };
 
