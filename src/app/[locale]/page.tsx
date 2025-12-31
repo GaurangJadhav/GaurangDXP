@@ -8,10 +8,14 @@ import {
   Play,
   MapPin,
   Clock,
-  ChevronRight
+  ChevronRight,
+  ExternalLink,
+  Radio,
+  Newspaper
 } from "lucide-react";
 import { TEAM_LOGOS, getAllTeamLogos } from "@/lib/team-logos";
-import { getAllTeams, getUpcomingMatches, getLatestNews } from "@/lib/contentstack";
+import { getAllTeams, getUpcomingMatches } from "@/lib/contentstack";
+import { getLiveCricketNews, formatNewsDate } from "@/lib/news-api";
 import { siteConfig } from "@/lib/site-config";
 import CountdownTimer from "@/components/CountdownTimer";
 import JoinLeagueButton from "@/components/JoinLeagueButton";
@@ -60,37 +64,6 @@ const fallbackUpcomingMatches = [
   },
 ];
 
-interface NewsItem {
-  id: string | number;
-  title: string;
-  excerpt: string;
-  date: string;
-  category: string;
-}
-
-const fallbackNews: NewsItem[] = [
-  {
-    id: 1,
-    title: "Flame Chargers clinch thriller against Storm Surfers",
-    excerpt: "In a nail-biting finish, Flame Chargers secured victory in the last over...",
-    date: "Dec 15, 2025",
-    category: "Match Report",
-  },
-  {
-    id: 2,
-    title: "OCPL 2025 Season kicks off with grand ceremony",
-    excerpt: "The fifth edition of Only Cricket League began with a spectacular opening...",
-    date: "Dec 10, 2025",
-    category: "News",
-  },
-  {
-    id: 3,
-    title: "Rising star Rahul Patil scores century on debut",
-    excerpt: "Young talent from Vasai West made heads turn with a stunning 102 off 58 balls...",
-    date: "Dec 12, 2025",
-    category: "Feature",
-  },
-];
 
 // Helper to get team logo
 function getTeamLogoData(shortName: string) {
@@ -118,14 +91,21 @@ export default async function HomePage({ params }: PageProps) {
   const joinLeagueTranslations = getJoinLeagueTranslations(locale);
   const nextMatchDate = new Date("2025-12-20T16:00:00");
 
-  // Fetch data from Contentstack
+  // Fetch data from Contentstack and live news in parallel
   let teams = fallbackTeams;
   let upcomingMatches = fallbackUpcomingMatches;
-  let news: NewsItem[] = fallbackNews;
+  let liveNews: Awaited<ReturnType<typeof getLiveCricketNews>> = [];
 
   try {
-    // Fetch teams
-    const contentstackTeams = await getAllTeams();
+    const [contentstackTeams, contentstackMatches, liveNewsData] = await Promise.all([
+      getAllTeams().catch(() => []),
+      getUpcomingMatches().catch(() => []),
+      getLiveCricketNews(3).catch(() => []),
+    ]);
+
+    liveNews = liveNewsData;
+
+    // Process teams
     if (contentstackTeams && contentstackTeams.length > 0) {
       teams = contentstackTeams.map((team, index) => ({
         id: index + 1,
@@ -138,8 +118,7 @@ export default async function HomePage({ params }: PageProps) {
       }));
     }
 
-    // Fetch upcoming matches
-    const contentstackMatches = await getUpcomingMatches();
+    // Process upcoming matches
     if (contentstackMatches && contentstackMatches.length > 0) {
       upcomingMatches = contentstackMatches.slice(0, 3).map((match) => {
         const team1Data = match.team_1?.[0];
@@ -170,22 +149,8 @@ export default async function HomePage({ params }: PageProps) {
         };
       });
     }
-
-    // Fetch latest news
-    const contentstackNews = await getLatestNews(3);
-    if (contentstackNews && contentstackNews.length > 0) {
-      news = contentstackNews.map((article) => ({
-        id: article.uid || "",
-        title: article.title || "",
-        excerpt: article.excerpt || article.content?.substring(0, 150) + "..." || "",
-        date: article.publish_date 
-          ? new Date(article.publish_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
-          : "Recent",
-        category: article.category || "News",
-      }));
-    }
   } catch (error) {
-    console.error("Error fetching data from Contentstack:", error);
+    console.error("Error fetching data:", error);
     // Use fallback data
   }
 
@@ -473,15 +438,21 @@ export default async function HomePage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* Latest News */}
+      {/* Live Cricket News */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="font-display text-3xl md:text-4xl tracking-wider text-white mb-2">
-                {t("section.latestNews").toUpperCase()}
-              </h2>
-              <p className="text-dark-400">Stay updated with OCPL</p>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Radio className="w-6 h-6 text-red-500" />
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              </div>
+              <div>
+                <h2 className="font-display text-3xl md:text-4xl tracking-wider text-white mb-1">
+                  LIVE CRICKET <span className="text-primary-500">NEWS</span>
+                </h2>
+                <p className="text-dark-400">Latest updates from the cricket world</p>
+              </div>
             </div>
             <Link
               href={`/${locale}/news`}
@@ -493,41 +464,71 @@ export default async function HomePage({ params }: PageProps) {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {news.map((article, index) => (
-              <article
+            {liveNews.map((article, index) => (
+              <a
                 key={article.id}
+                href={article.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="card overflow-hidden group stagger-item"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Placeholder Image */}
-                <div className="h-48 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="font-display text-4xl text-white/20">OCPL</span>
-                  </div>
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 rounded-full bg-primary-500 text-white text-xs font-medium">
-                      {article.category}
+                {/* Image */}
+                <div className="h-48 relative overflow-hidden">
+                  {article.imageUrl ? (
+                    <Image
+                      src={article.imageUrl}
+                      alt={article.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      unoptimized
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 flex items-center justify-center">
+                      <Newspaper className="w-12 h-12 text-white/20" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute top-4 left-4 flex items-center gap-2">
+                    {index === 0 && (
+                      <span className="px-2 py-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                        LIVE
+                      </span>
+                    )}
+                    <span className="px-2 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-xs">
+                      {article.source}
                     </span>
                   </div>
                 </div>
                 <div className="p-6">
-                  <p className="text-dark-500 text-sm mb-2">{article.date}</p>
+                  <p className="text-dark-500 text-sm mb-2 flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {formatNewsDate(article.pubDate)}
+                  </p>
                   <h3 className="font-semibold text-white mb-3 group-hover:text-primary-500 transition-colors line-clamp-2">
                     {article.title}
                   </h3>
                   <p className="text-dark-400 text-sm line-clamp-2">
-                    {article.excerpt}
+                    {article.description}
                   </p>
-                  <Link
-                    href={`/${locale}/news/${article.id}`}
-                    className="inline-flex items-center gap-2 text-primary-500 text-sm mt-4 group-hover:gap-3 transition-all"
-                  >
+                  <div className="inline-flex items-center gap-2 text-primary-500 text-sm mt-4 group-hover:gap-3 transition-all">
                     Read More
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
+                    <ExternalLink className="w-4 h-4" />
+                  </div>
                 </div>
-              </article>
+              </a>
             ))}
+          </div>
+
+          <div className="mt-8 text-center">
+            <Link
+              href={`/${locale}/news`}
+              className="btn-secondary inline-flex items-center gap-2"
+            >
+              View All Cricket News
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>

@@ -1,12 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "images.contentstack.io",
-      "assets.contentstack.io",
-      "eu-images.contentstack.com",
-      "img.youtube.com",
-      "i.ytimg.com",
+    remotePatterns: [
+      { protocol: "https", hostname: "images.contentstack.io" },
+      { protocol: "https", hostname: "assets.contentstack.io" },
+      { protocol: "https", hostname: "eu-images.contentstack.com" },
+      { protocol: "https", hostname: "img.youtube.com" },
+      { protocol: "https", hostname: "i.ytimg.com" },
+      // Live news image sources
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "**.newsdata.io" },
+      { protocol: "https", hostname: "**.cricbuzz.com" },
+      { protocol: "https", hostname: "**.espncricinfo.com" },
+      { protocol: "https", hostname: "**.bcci.tv" },
+      { protocol: "https", hostname: "**.icc-cricket.com" },
     ],
   },
   env: {

@@ -1,44 +1,94 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// This endpoint receives webhook from Contentstack Automate
+// This endpoint receives webhook from Contentstack Automate OR Stack Webhooks
 // and sends a confirmation email using Resend
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
-interface WebhookPayload {
-  // Contentstack Automate webhook payload structure
-  trigger?: {
-    data?: {
-      entry?: {
-        full_name?: string;
-        email?: string;
-        phone?: string;
-        preferred_role?: string;
-        batting_style?: string;
-        bowling_style?: string;
-        experience?: string;
-        preferred_team?: string;
-      };
-    };
-  };
-  // Direct entry structure (alternative)
-  entry?: {
-    full_name?: string;
-    email?: string;
-    phone?: string;
-    preferred_role?: string;
-    batting_style?: string;
-    bowling_style?: string;
-    experience?: string;
-    preferred_team?: string;
-  };
-  // Flat structure (another alternative)
+// Entry data structure
+interface EntryData {
   full_name?: string;
   email?: string;
   phone?: string;
   preferred_role?: string;
   batting_style?: string;
   bowling_style?: string;
+  experience?: string;
+  preferred_team?: string;
+}
+
+interface WebhookPayload {
+  // Contentstack Automate webhook payload structure
+  trigger?: {
+    data?: {
+      entry?: EntryData;
+    };
+  };
+  // Automate with $trigger syntax
+  $trigger?: {
+    data?: {
+      entry?: EntryData;
+    };
+  };
+  // Stack Webhook payload structure (event-based)
+  event?: string;
+  data?: {
+    entry?: EntryData;
+  };
+  // Direct entry structure
+  entry?: EntryData;
+  // Flat structure (manual webhook body)
+  full_name?: string;
+  email?: string;
+  phone?: string;
+  preferred_role?: string;
+  batting_style?: string;
+  bowling_style?: string;
+}
+
+// Helper to extract entry data from various payload structures
+function extractEntryData(payload: WebhookPayload): EntryData {
+  // Try different payload structures
+  
+  // 1. Automate: trigger.data.entry
+  if (payload.trigger?.data?.entry) {
+    console.log("Detected: Automate trigger.data.entry structure");
+    return payload.trigger.data.entry;
+  }
+  
+  // 2. Automate: $trigger.data.entry
+  if (payload.$trigger?.data?.entry) {
+    console.log("Detected: Automate $trigger.data.entry structure");
+    return payload.$trigger.data.entry;
+  }
+  
+  // 3. Stack Webhook: data.entry
+  if (payload.data?.entry) {
+    console.log("Detected: Stack Webhook data.entry structure");
+    return payload.data.entry;
+  }
+  
+  // 4. Direct entry object
+  if (payload.entry) {
+    console.log("Detected: Direct entry structure");
+    return payload.entry;
+  }
+  
+  // 5. Flat structure (fields at root level)
+  if (payload.full_name || payload.email) {
+    console.log("Detected: Flat structure");
+    return {
+      full_name: payload.full_name,
+      email: payload.email,
+      phone: payload.phone,
+      preferred_role: payload.preferred_role,
+      batting_style: payload.batting_style,
+      bowling_style: payload.bowling_style,
+    };
+  }
+  
+  console.log("No recognized structure, returning empty");
+  return {};
 }
 
 export async function POST(request: NextRequest) {
@@ -48,10 +98,7 @@ export async function POST(request: NextRequest) {
     console.log("Webhook received:", JSON.stringify(payload, null, 2));
 
     // Extract entry data from various possible structures
-    const entry = 
-      payload.trigger?.data?.entry || 
-      payload.entry || 
-      payload;
+    const entry = extractEntryData(payload);
 
     const {
       full_name,
